@@ -96,6 +96,15 @@ secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
 <Router context={secondary} />
 ```
 
+The router also accepts slotted content. On the Router component you have the component and props variables at your disposal.
+
+```html 
+<Router let:component let:props>
+  <h2>Showing page : {props.slug}</h2>
+  <svelte:component this={component} {...props} />
+</Router>
+```
+
 Enable sirv for SPA with the flag '--single'
 ```js
 "start": "sirv public --single"
