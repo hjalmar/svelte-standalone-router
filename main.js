@@ -1,13 +1,12 @@
-import router, { context } from './router';
+import router from './router.js';
 import Router from './router.svelte';
-import link from './link';
+import link from './link.js';
 
 // svelte component
 export default Router;
 
 // js implementations
 export { 
-  context,
   router,
   link,
  };

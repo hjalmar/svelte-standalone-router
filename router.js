@@ -1,13 +1,21 @@
 import Router from 'standalone-router';
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export const request = writable();
-export const component = writable();
-export let context = null;
-export default (options) => {
-  context = new Router(options);
+export let contexts = new Map();
+let initialized = false;
+
+if(!initialized){
+  initialized = true;
   window.addEventListener('popstate', e => {
-    context.execute(window.location.pathname);
+    contexts.forEach(context => context.router.execute(window.location.pathname));
   });
-  return context;
+}
+
+export default (options) => {
+  const router = new Router(options);
+  contexts.set(router, {
+    component: writable(),
+    router
+  });
+  return router;
 };
