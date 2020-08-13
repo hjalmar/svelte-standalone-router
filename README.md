@@ -9,6 +9,7 @@ Unlike the standalone router the implementation is done within a svelte componen
 
 ## Usage
 ```js
+// router.js
 import { router } from 'svelte-standalone-router';
 
 // import components
@@ -16,7 +17,7 @@ import Index from './index.svelte';
 import Subpage from './subpage.svelte';
 
 // initialize router 
-const app = router({
+export const app = router({
   initial: location.pathname
 });
 
@@ -65,6 +66,34 @@ Router links are defined using the Actions directive. The action will use the 'h
 </nav>
 
 <Router />
+```
+
+Not specifying a context will default back to the first one defined being used as it's context.
+
+But at times where one might want to have more than one router it's as simple as creating another router(context) and export that and pass it along as a prop to the Router component.
+
+```js
+// main router
+export const main = router({initial: location.pathname});
+// create main routes
+main.get((req, res) => res.send(MainComponent, {...req.params}));
+
+// secondary router
+export const secondary = router({initial: location.pathname});
+// create secondary routes
+secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
+```
+
+
+```html
+// app.svelte
+<script>
+  import Router, { link } from 'svelte-standalone-router';
+  import { main, secondary } from './router.js';
+</script>
+
+<Router context={main} />
+<Router context={secondary} />
 ```
 
 Enable sirv for SPA with the flag '--single'
