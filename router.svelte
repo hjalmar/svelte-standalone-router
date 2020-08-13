@@ -19,5 +19,7 @@
 </script>
 
 {#if $component}
-  <svelte:component this={$component.context} {...$component.props}></svelte:component>
+  <slot component={$component.context} props={$component.props}>
+    <svelte:component this={$component.context} {...$component.props}></svelte:component>
+  </slot>
 {/if}
