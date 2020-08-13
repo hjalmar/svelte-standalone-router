@@ -2,8 +2,8 @@
   import Router from 'standalone-router';
   import { contexts } from './router.js';
 
-  // as default, get the first value! as a Map remembers the insertion order this 
-  // works as a way to fallback to the first context if none is provided
+  // as default get the first value from the contexts since a Map remembers the insertion 
+  // order. this works as a way to fallback to the first context if none is provided
   export let context = contexts.keys().next().value;
 
   if(!context || !(context instanceof Router)){
