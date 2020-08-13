@@ -46,11 +46,12 @@ app.get('/:slug', (req, res) => {
 
 ## Component implementation
 ```js
-import Router, { link, navigate, redirect } from 'svelte-standalone-router';
+import Router, { link, navigate, redirect, location } from 'svelte-standalone-router';
 // Router : svelte-component
 // link : Action directive used on 'a' tags. Uses 'href' attribute as path
 // navigate(path : String ) : push state 
 // redirect(path : String) : replace state
+// $location : svelte-store
 ```
 
 Router links are defined using the Actions directive. The action will use the 'href' attribute for internal routing.
