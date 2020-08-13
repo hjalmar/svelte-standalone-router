@@ -57,11 +57,12 @@ Router links are defined using the Actions directive. The action will use the 'h
 ```html
 // app.svelte
 <script>
-  import Router, { link } from 'svelte-standalone-router';
+  import Router, { link, location } from 'svelte-standalone-router';
 </script>
 
 <nav>
-  <a href="/" use:link>Home</a>
+  <!-- one way to check for currently active route by using the location store -->
+  <a href="/" class:active={$location == '/'} use:link>Home</a>
   <a href="/subpage" use:link>Subpage</a>
 </nav>
 

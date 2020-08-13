@@ -1,4 +1,4 @@
-import router from './router.js';
+import router, { location } from './router.js';
 import Router from './router.svelte';
 import link from './link.js';
 
@@ -9,6 +9,7 @@ export default Router;
 export { 
   router,
   link,
+  location,
  };
 
 // extending the standalone router with custom 
