@@ -1,7 +1,9 @@
+import { Router } from './main.js';
 export default (element, props) => {
   const clickHandler = (e) => {
     e.preventDefault();
-    const href = e.currentTarget.getAttribute('href');
+    // replace all duplicate '/' that might be going on
+    const href = `/${Router.linkBase}/${e.currentTarget.getAttribute('href')}`.replace(/[\/]+/g, '/');
     if(!href){
       return;
     }

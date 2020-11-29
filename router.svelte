@@ -1,5 +1,5 @@
 <script>
-  import Router from 'standalone-router';
+  import Router from './SvelteStandaloneRouter';
   import { contexts } from './router.js';
 
   // as default get the first value from the contexts since a Map remembers the insertion 
