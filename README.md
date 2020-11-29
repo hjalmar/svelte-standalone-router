@@ -41,9 +41,22 @@ app.get('/:slug', (req, res) => {
   // send a component as first argument and the second 
   // argument will be props passed to said component
   res.send(Subpage, { slug: req.params.slug });
+  // or force a new instance
+  // res.send({ component: Subpage, force: true }, { slug: req.params.slug });
 });
 ```
 
+Sending a component to be rendered is done int two ways. One is to simply pass the Svelte component as the first argument or if you need to force a new instance and a redraw of the componennt you pass in an object with the properties 'component' and 'force'
+```js
+// quick way if you don't have any dynamic data that needs to 
+// be updated on every new page load
+res.send(Subpage, { slug: req.params.slug });
+// updates with a new component instance on each route change. Simply pass 
+// false to the force property to avoid forcing a new instance
+res.send({ component: Subpage, force: true }, { slug: req.params.slug });
+```
+
+Adding linkBase to have all links be prefixed with a sub path
 ```js
 // add linkBase to make all link actions be prefixed with a base
 import { Router } from 'svelte-standalone-router';
@@ -113,7 +126,7 @@ main.get((req, res) => res.send(MainComponent, { ...req.params }));
 // secondary router
 export const secondary = context({ initial: location.pathname });
 // create secondary routes
-secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
+secondary.get((req, res) => res.send(SecondaryComponent, { ...req.params }));
 ```
 
 
