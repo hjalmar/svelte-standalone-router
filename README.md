@@ -62,9 +62,10 @@ export const app = context({
 
 ```
 
-mount and destroy the popstate listener is as easy as calling their respective function.
+`mount` and `destroy` the popstate listener is as easy as calling their respective function.
 ```js
 import { mount, destroy } from 'svelte-standalone-router';
+// mount and destroy functions
 mount();
 destroy();
 ```
@@ -78,8 +79,8 @@ import RouterComponent, { link, navigate, redirect, location, mount, destroy, Ro
 // navigate(path : String ) : push state 
 // redirect(path : String) : replace state
 // $location : svelte-store
-// mount : add popstate listener (it has to have been destroyed before being able to be added again)
-// destroy : destroy current listener for popstate event
+// mount() : add popstate listener (it has to have been destroyed before being able to be added again)
+// destroy() : destroy current listener for popstate event
 // Router : class SvelteStandaloneRouter (inherited from standalone-router library) 
 ```
 
@@ -87,7 +88,7 @@ Router links are defined using the actions directive. The action will use the 'h
 ```html
 // app.svelte
 <script>
-  import Router, { link, location } from 'svelte-standalone-router';
+  import RouterComponent, { link, location } from 'svelte-standalone-router';
 </script>
 
 <nav>
@@ -105,12 +106,12 @@ But at times where one might want to have more than one router it's as simple as
 
 ```js
 // main router
-export const main = router({ initial: location.pathname });
+export const main = context({ initial: location.pathname });
 // create main routes
 main.get((req, res) => res.send(MainComponent, { ...req.params }));
 
 // secondary router
-export const secondary = router({ initial: location.pathname });
+export const secondary = context({ initial: location.pathname });
 // create secondary routes
 secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
 ```
