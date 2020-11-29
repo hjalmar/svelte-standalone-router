@@ -1,4 +1,4 @@
-import Router from 'standalone-router';
+import Router from './SvelteStandaloneRouter.js';
 import { writable } from 'svelte/store';
 
 export let contexts = new Map();
