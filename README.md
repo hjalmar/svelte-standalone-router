@@ -10,14 +10,14 @@ Unlike the standalone router the implementation is done within a svelte componen
 ## Usage
 ```js
 // router.js
-import { router } from 'svelte-standalone-router';
+import { context } from 'svelte-standalone-router';
 
 // import components
 import Index from './index.svelte';
 import Subpage from './subpage.svelte';
 
 // initialize router 
-export const app = router({
+export const app = context({
   initial: location.pathname
 });
 
@@ -44,17 +44,46 @@ app.get('/:slug', (req, res) => {
 });
 ```
 
+```js
+// add linkBase to make all link actions be prefixed with a base
+import { Router } from 'svelte-standalone-router';
+
+// notice how it is static on the Router class
+Router.linkBase = '/sub/dir';
+
+// one can also use the setter function
+// Router.setLinkBase('/sub/dir');
+
+// initialize router 
+export const app = context({
+  initial: location.pathname,
+  base: Router.linkBase
+});
+
+```
+
+mount and destroy the popstate listener is as easy as calling their respective function.
+```js
+import { mount, destroy } from 'svelte-standalone-router';
+mount();
+destroy();
+```
+
+
 ## Component implementation
 ```js
-import Router, { link, navigate, redirect, location } from 'svelte-standalone-router';
-// Router : svelte-component
+import RouterComponent, { link, navigate, redirect, location, mount, destroy, Router } from 'svelte-standalone-router';
+// RouterComponent : svelte-component
 // link : Action directive used on 'a' tags. Uses 'href' attribute as path
 // navigate(path : String ) : push state 
 // redirect(path : String) : replace state
 // $location : svelte-store
+// mount : add popstate listener (it has to have been destroyed before being able to be added again)
+// destroy : destroy current listener for popstate event
+// Router : class SvelteStandaloneRouter (inherited from standalone-router library) 
 ```
 
-Router links are defined using the Actions directive. The action will use the 'href' attribute for internal routing.
+Router links are defined using the actions directive. The action will use the 'href' attribute for internal routing.
 ```html
 // app.svelte
 <script>
@@ -67,7 +96,7 @@ Router links are defined using the Actions directive. The action will use the 'h
   <a href="/subpage" use:link>Subpage</a>
 </nav>
 
-<Router />
+<RouterComponent />
 ```
 
 Not specifying a context will default back to the first one defined being used as it's context.
@@ -76,12 +105,12 @@ But at times where one might want to have more than one router it's as simple as
 
 ```js
 // main router
-export const main = router({initial: location.pathname});
+export const main = router({ initial: location.pathname });
 // create main routes
-main.get((req, res) => res.send(MainComponent, {...req.params}));
+main.get((req, res) => res.send(MainComponent, { ...req.params }));
 
 // secondary router
-export const secondary = router({initial: location.pathname});
+export const secondary = router({ initial: location.pathname });
 // create secondary routes
 secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
 ```
@@ -90,21 +119,21 @@ secondary.get((req, res) => res.send(SecondaryComponent, {...req.params}));
 ```html
 // app.svelte
 <script>
-  import Router, { link } from 'svelte-standalone-router';
+  import RouterComponent, { link } from 'svelte-standalone-router';
   import { main, secondary } from './router.js';
 </script>
 
-<Router context={main} />
-<Router context={secondary} />
+<RouterComponent context={main} />
+<RouterComponent context={secondary} />
 ```
 
 The router also accepts slotted content. On the Router component you have the component and props variables at your disposal.
 
 ```html 
-<Router let:component let:props>
+<RouterComponent let:component let:props>
   <h2>Showing page : {props.slug}</h2>
   <svelte:component this={component} {...props} />
-</Router>
+</RouterComponent>
 ```
 
 Enable sirv for SPA with the flag '--single'
