@@ -1,4 +1,4 @@
-import { Router } from './main.js';
+import Router from './SvelteStandaloneRouter.js';
 export default (element, props) => {
   const clickHandler = (e) => {
     e.preventDefault();
