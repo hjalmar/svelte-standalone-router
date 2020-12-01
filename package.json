@@ -10,6 +10,6 @@
   "author": "Jens Hjalmarsson",
   "license": "MIT",
   "dependencies": {
-    "standalone-router": "^1.0.1"
+    "standalone-router": "^1.0.2"
   }
 }
