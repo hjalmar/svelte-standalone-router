@@ -1,11 +1,10 @@
 import Router from './SvelteStandaloneRouter.js';
 import { writable } from 'svelte/store';
-import { tick } from 'svelte';
 
 export let contexts = new Map();
 export let location = writable();
 let initialized = false;
-
+let firstLoad = false;
 // handle the linkBase in pathname
 const getPathname = (path) => {
   const re = new RegExp(`^${Router.linkBase}`, 'i');
@@ -19,10 +18,14 @@ const popstateHandler = e => {
 };
 
 // if the popstate listener has been destroy 'mount' re-adds the listener 
-export const mount = () => {
+export const mount = async () => {
   if(!initialized){
     // mark it initialized and update the location store with the current pathname
     initialized = true;
+    if(!firstLoad){
+      firstLoad = true;
+      location.set(getPathname(window.location.pathname));
+    }
     window.addEventListener('popstate', popstateHandler);
   }
 }
