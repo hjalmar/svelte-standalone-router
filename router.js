@@ -18,16 +18,12 @@ const popstateHandler = e => {
   contexts.forEach(context => context.router.execute(window.location.pathname));
 };
 
-// if the popstate listener has been destroy 'mount' readds the listener 
-export const mount = async () => {
+// if the popstate listener has been destroy 'mount' re-adds the listener 
+export const mount = () => {
   if(!initialized){
     // mark it initialized and update the location store with the current pathname
     initialized = true;
     window.addEventListener('popstate', popstateHandler);
-    // await next microtask so we know our router has been initialized 
-    // else the first mount will have a race condition going on
-    await tick();
-    dispatchEvent(new Event('popstate'));
   }
 }
 
