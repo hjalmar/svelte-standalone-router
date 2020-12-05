@@ -2,6 +2,7 @@ import Router from './SvelteStandaloneRouter.js';
 import context, { location, mount, destroy } from './router.js';
 import RouterComponent from './router.svelte';
 import link from './link.js';
+import { redirect, navigate } from './helpers.js';
 
 // svelte component
 export default RouterComponent;
@@ -13,17 +14,7 @@ export {
   link,
   location,
   mount, 
-  destroy
+  destroy,
+  redirect,
+  navigate
  };
-
-// extending the standalone router with custom 
-// methods to perform certain tasks.
-export const navigate = (url, state, title) => {
-  history.pushState(state || {}, title || '', url); 
-  dispatchEvent(new Event('popstate'));
-}
-
-export const redirect = (url, state, title) => {
-  history.replaceState(state || {}, title || '', url);
-  dispatchEvent(new Event('popstate'));
-}
