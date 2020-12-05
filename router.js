@@ -14,7 +14,7 @@ const getPathname = (path) => {
 // the popstate callback handler
 const popstateHandler = e => {
   location.set(getPathname(window.location.pathname));
-  contexts.forEach(context => context.router.execute(window.location.pathname));
+  contexts.forEach(context => context.router.execute(window.location.pathname, e.detail));
 };
 
 // if the popstate listener has been destroy 'mount' re-adds the listener 

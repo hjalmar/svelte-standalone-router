@@ -1,5 +1,13 @@
 import Router from './SvelteStandaloneRouter.js';
+import { navigate, redirect } from './helpers.js';
+
 export default (element, props) => {
+  props = {
+    type: 'navigate',
+    state: {},
+    title: '',
+    ...props
+  };
   const clickHandler = (e) => {
     e.preventDefault();
     // replace all duplicate '/' that might be going on
@@ -7,8 +15,14 @@ export default (element, props) => {
     if(!href){
       return;
     }
-    history.pushState(null, '', href);
-    dispatchEvent(new Event('popstate'));
+    if(props.type == 'navigate'){
+      navigate(href, props.state, props.title);
+    }else if(props.type == 'redirect'){
+      redirect(href, props.state, props.title);
+    }else{
+      console.warn(`Invalid 'use:link' type. Expecting 'navigate'(default) or 'redirect'`);
+      return;
+    }
   }
   element.addEventListener('click', clickHandler);
   return {
