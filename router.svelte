@@ -10,6 +10,8 @@
     throw new Error(`Invalid Router context. Did you initialize the component with a valid context?`);
   }
   const { component } = contexts.get(context);
+  // store the current/previous pathname to compare with the next route that wants to get loaded 
+  let prevPathname;
   export const unsubscribe = context.subscribe((callback, props = {}) => {
     // implement the option to either force a reload or use the already loaded
     // component that's already been mounted at some point. By default svelte does not mount 
@@ -20,10 +22,14 @@
     if(callback.hasOwnProperty('component')){
       _callback = callback.component;
     }
-    // force a new instance if force is true
-    if(callback.force == true){
-      _callback = class extends _callback{};
+    // check if the current url pathname is the same and it's not forced. if it's the same don't do anything
+    // because we are already on the current page. If we force it we want it to reload.
+    if(location.pathname == prevPathname && callback.force != true){
+      // we end early so we don't update the store
+      return;
     }
+    _callback = class extends _callback{};
+    prevPathname = location.pathname;
     // update the writable store
     component.set({
       context: _callback,
