@@ -4,6 +4,9 @@ import RouterComponent from './router.svelte';
 import link from './link.js';
 import { redirect, navigate } from './helpers.js';
 
+import Redirect from './redirect.svelte';
+import Navigate from './navigate.svelte';
+
 // svelte component
 export default RouterComponent;
 
@@ -15,6 +18,10 @@ export {
   location,
   mount, 
   destroy,
+  // helpers
   redirect,
-  navigate
+  navigate,
+  // component helpers
+  Redirect,
+  Navigate,
  };
