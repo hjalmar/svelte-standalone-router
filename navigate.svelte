@@ -1,5 +1,5 @@
 <script>
   import { navigate } from './helpers';
-  export let to;
-  navigate(to);
+  export let to, state = {}, title = '';
+  navigate(to, state, title);
 </script>
