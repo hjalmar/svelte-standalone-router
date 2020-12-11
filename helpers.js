@@ -1,7 +1,6 @@
 const dispatch = (url, state, title) => {
   dispatchEvent(new CustomEvent('popstate', { 
     detail: {
-      // url,
       title,
       params: { ...state }
     } 
