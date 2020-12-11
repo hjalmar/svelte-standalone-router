@@ -9,9 +9,15 @@ export default (element, props) => {
     ...props
   };
   const clickHandler = (e) => {
+    // make the check before preventing default behaviour since we should not block 
+    // the default behaviour if we don't supply the required url string
+    const url = props.to || props.href || e.currentTarget.getAttribute('href') || e.currentTarget.getAttribute('data-href');
+    if(!url){
+      return;
+    }
     e.preventDefault();
     // replace all duplicate '/' that might be going on
-    const href = `/${Router.linkBase}/${e.currentTarget.getAttribute('href')}`.replace(/[\/]+/g, '/');
+    const href = `/${Router.linkBase}/${url}`.replace(/[\/]+/g, '/');
     if(!href){
       return;
     }
