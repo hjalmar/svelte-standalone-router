@@ -14,19 +14,4 @@ export default class SvelteRouter extends Router{
   static get linkBase(){
     return SvelteRouter.__linkBase;
   }
-
-  // handle scroll reset
-  static __scrollReset = true;
-  static setScrollReset(value){
-    if(typeof value != 'boolean'){
-      throw new SvelteStandaloneRouterError(`Invalid 'scrollReset'. Expecting value of type 'boolean'`);
-    }
-    return SvelteRouter.__scrollReset = value;
-  }
-  static set scrollReset(value){
-    return SvelteRouter.setScrollReset(value);
-  }
-  static get scrollReset(){
-    return SvelteRouter.__scrollReset;
-  }
 }
