@@ -7,7 +7,7 @@ npm i -D svelte-standalone-router
 
 Unlike the standalone router the implementation is done within a svelte component. Simply define your routes and middlewares as per the [standalone-router](https://github.com/hjalmar/standalone-router) documentation.
 
-## Library implementation
+## <a name="library-implementation" href="#library-implementation">Library implementation</a>
 Components and utilities the library exposes. As per the svelte specs all svelte components are Capitalized. 
 ```js
 import RouterComponent, { context, link, navigate, redirect, location, mount, destroy Router, Navigate, Redirect } from 'svelte-standalone-router';
@@ -29,7 +29,9 @@ svelte-standalone-router {
 }
 ```
 
-## Creating a router context
+---
+
+## <a name="creating-a-router-context" href="#creating-a-router-context">Creating a router context</a>
 Most of the time you will only ever need one context, tho the ability to have several router contexts on the page at the same time is a possibility
 ```js
 // import context from library
@@ -41,7 +43,8 @@ const app = context({
   initial: location.pathname
 });
 ```
-### Adding routes
+
+### <a name="adding-routes" href="#adding-routes">Adding routes</a>
 Add get routes to your created context with the `get` method. The get method takes an argument `String` for the route, a undefined number of middlewares and lastly a callback for when the route matches. 
 
 A simple route that matches the root
@@ -64,7 +67,9 @@ app.get('/', (req, res) => {
 
 Let's try a more advanced route with dynamic parameters. The route is separated in sections by `/`, like a directory structure. Each part can use a dynamic parameter which gets exposed on the `req.params` object.
 
-NOTE: A dynamic parameter catches everything for it's section and cannot be combined with or placed within a string. It has to start with a `:`, so a route like this `/articles/article-title-:id` is therefore invalid, by design! 
+> #### NOTE 
+A dynamic parameter catches everything for it's section and cannot be combined with or placed within a string. It has to start with a `:`, so a route like this `/articles/article-title-:id` is therefore invalid, by design! 
+
 ```js
 app.get('/articles/:id', (req, res) => {
   // spread the whole params object without having to hardcode anything
@@ -81,7 +86,7 @@ app.get('/:slug->about', (req, res) => {
 ```
 So far all routes have been explicit, meaning the route has matched from start to end. To make a route implicit you add a `*` to the end of the route. 
 
-NOTE: `*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
+> **NOTE** `*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
 
 This will match a route like `/articles/10` and `/articles/20/what-is-up-with-2020`. It will explicitly match up until the `:id` and then everything else.
 ```js
@@ -115,7 +120,7 @@ app.get((req, res) => {
 });
 ```
 
-### Request object
+### <a name="request-object" href="#request-object">Request object</a>
 The request object exposes everything related to the request. This you can use to determin if you want to preload data, what component to load or error out when a request does not meet the requirements.
 ```js
 Request{
@@ -128,7 +133,7 @@ Request{
 }
 ```
 
-### Response object
+### <a name="response-object" href="#response-object">Response object</a>
 The response object is responsible for handling the response. Currently you can send the component and its props to the router or as an error.
 ```js
 Response{
@@ -137,7 +142,9 @@ Response{
 }
 ```
 
-## Base and linkbase
+---
+
+## <a name="base-and-linkbase" href="#base-and-linkbase">Base and linkbase</a>
 If you are deploying your site to the root no extra configuration has to be done to make it work. But on the occasions where you want to deploy it under a subdirectory you would want to defined the `base` and or perhaps the `linkBase` to cater to that location.
 
 Let's start with base. Lets deploy our app under `/project`, so we would access our site under `https://example.com/project`.
@@ -176,7 +183,20 @@ const app = context({
 });
 ```
 
-## Catching errors
+---
+
+## <a name="state-object" href="#state-object">State object</a>
+On every request you can pass a states object and so does the initial request by the `state` property passed to the context creation.
+```js
+// add custom state on the initial request
+const app = context({
+  initial: location.pathname,
+  state: { custom: 'initial state' }
+});
+```
+---
+
+## <a name="catching-errors" href="#catching-errors">Catching errors</a>
 Like routes you can catch errors with the `catch` method. The underlying implementation is basically the same as `get` routes except it will be used as a fallback if route is not found or manually triggered and that it recieves an additional argument with custom props.
 
 ```js
@@ -197,7 +217,9 @@ app.get('/', (req, res)){
 }
 ```
 
-## Middlewares
+---
+
+## <a name="middlewares" href="#middlewares">Middlewares</a>
 There are two kinds of middlewares, globals and those attached on to the route itself.
 To define a global middleware you use the `use` method. Unlike get and catch routes, global middlewares do not take a route. You can define multiple global middlewares and how they are executed is in the order they are defined. 
 
@@ -234,7 +256,9 @@ app.get('/user'. hasAuth, (req, res) => {
 });
 ```
 
-## Svelte implementation
+---
+
+## <a name="svelte-implementation" href="#svelte-implementation">Svelte implementation</a>
 The `RouterComponent` takes optional slot argument and exposes both the `component` and the `props` as variables.
 
 ```html
@@ -246,7 +270,7 @@ The `RouterComponent` takes optional slot argument and exposes both the `compone
 ``` 
 If you want to customize the implementation and perhaps add transitions or animations you can do so by using the exposed variables and utilizing the a `svelte:component` element.
 
-NOTE: that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
+> **NOTE** that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
 
 ```html
 <script>
@@ -262,13 +286,13 @@ NOTE: that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `sve
 </RouterComponent>
 ``` 
 
-### Changing routes
+### <a name="changing-routes" href="#changing-routes">Changing routes</a>
 There is a few different ways to make a request to a route. First lets look at the `Actions` directive. The actions directive adds an on:click handler to the element it is used on. To reduce redundant code there are some fallbacks in place and it goes like this.
 
 link:property : `to: '/first'` -> `href: '/second'`,
 Element:attribute : `href="/third"` -> `data-href="/fourth"`
 
-So it goes from link property `to`, then, `href`, then element attribute `href` and lastly data-attribute `data-href`. Why so complicated? Because on links we want to use the href attribute to reduce code, while on maybe buttons that according to the specs don't inmplement a href attribute. Now is that a problem using 'expando attributes', for some it might not, but for others arguing for correct semantics it perhaps would, i'm not the judge of that. Use the method that suits your needs.
+So it goes from link property `to`, then, `href`, then element attribute `href` and lastly data-attribute `data-href`. Why so complicated? Because on links we want to use the href attribute to reduce code, while on maybe buttons that according to the specs don't implement a href attribute. Is that such a problem using 'expando attributes'? for some it might not, but for others arguing for correct semantics it perhaps would, i'm not the judge of that. Use the method that suits your needs.
 
 The link `Action` also accepts an object of properties, but as the bare minimum it will fallback and use the `href` attribute to know which page to route to.
 ```html
@@ -301,7 +325,7 @@ Different ways of navigating with an example using a button.
 You can also pass along a state object to the `Request` object.
 ```html
 <script>
-  import { link, navigate } from 'svelte-standalone-router';
+  import { link } from 'svelte-standalone-router';
 </script>
 
 <button use:link={{to: '/article', state: { id: 33 }}}>article</button>
@@ -333,7 +357,7 @@ Adding active class on active routes. The current location is stored in a svelte
 <a href="/user" use:link class:active={$location.startsWith('/user')}>user</a>
 ```
 
-### Programmatically changing routes
+### <a name="programmatically-changing-routes" href="#programmatically-changing-routes">Programmatically changing routes</a>
 To programmatically navigate or redirect you have two functions to your exposure. The difference between the two is that `navigate` adds a record to the `History` object which means you can go back and forth in the history, while redirect does not add a record it just changes the current url.  
 
 The helper implementation arguments
@@ -347,7 +371,7 @@ redirect(url : String, state : Object);
   redirect('/subpage');
 ```
 
-There also exists a `Navigate` and `Redirect` svelte components which is mure in tune with how a frontend library would do it. You can differentiate it by the fact that svelte-components needs to be Capitalized.
+There also exists a `Navigate` and `Redirect` svelte components which is more in tune with how a frontend library would do it. You can differentiate it by the fact that svelte-components needs to be Capitalized.
 
 Like the link action you can use either `to` or `href` with the to prop having precedence. The components implement the helper functions so you can optionally pass a state prop.
 ```html
@@ -368,7 +392,9 @@ mount();
 destroy();
 ```
 
-## Quick usage
+--- 
+
+## <a name="quick-usage" href="#quick-usage">Quick usage</a>
 ```js
 import { context } from 'svelte-standalone-router';
 
