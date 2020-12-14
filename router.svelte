@@ -33,7 +33,6 @@
       return;
     }
     _callback = class extends _callback{};
-    // prevPathname = location.pathname;
     // update the writable store
     component.set({
       context: _callback,
