@@ -12,7 +12,9 @@ export default RouterComponent;
 
 // js implementations
 export { 
+  // svelte components
   Router,
+  // api
   context,
   link,
   location,
