@@ -1,18 +1,23 @@
 <script>
-  import Router from './SvelteStandaloneRouter';
+  import Router, { SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
   import { contexts } from './router.js';
 
   // as default get the first value from the contexts since a Map remembers the insertion 
   // order. this works as a way to fallback to the first context if none is provided
   export let context = contexts.keys().next().value;
-
+  
   if(!context || !(context instanceof Router)){
     throw new Error(`Invalid Router context. Did you initialize the component with a valid context?`);
   }
   const { component } = contexts.get(context);
   // store the current/previous pathname to compare with the next route that wants to get loaded 
   let prevPathname;
-  export const unsubscribe = context.subscribe((callback, props = {}) => {
+  context.subscribe((callback, props = {}) => {
+    // a dirty check to see it is a "component". Since there is not way to check if it is a svelte component
+    // this would atleast force it to be a function and will catch most errors where a svelte component isn't passed
+    if(typeof callback != 'function'){
+      throw new SvelteStandaloneRouterError(`Unable to load component. Did you pass a valid svelte component to the 'send' response?`);
+    }
     // implement the option to either force a reload or use the already loaded
     // component that's already been mounted at some point. By default svelte does not mount 
     // a new instance so we have to do that manually by instead of passing a svelte component,
