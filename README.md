@@ -1,4 +1,4 @@
-# svelte-standalone-router
+# Svelte Standalone Router
 A standalone router based on https://github.com/hjalmar/standalone-router
 
 ```
@@ -86,7 +86,8 @@ app.get('/:slug->about', (req, res) => {
 ```
 So far all routes have been explicit, meaning the route has matched from start to end. To make a route implicit you add a `*` to the end of the route. 
 
-> **NOTE** `*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
+> #### NOTE 
+`*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
 
 This will match a route like `/articles/10` and `/articles/20/what-is-up-with-2020`. It will explicitly match up until the `:id` and then everything else.
 ```js
@@ -130,6 +131,7 @@ Request{
   route : String // what route that got triggered, for instance: "/route/:param"
   // defined with the use:link action or with the navigate or redirect helper functions
   state : Object // the state object. unlike the get params that is the arguments attached to the route/pathname, this is the custom data you sent along with the request
+  query : Object // query parameters for the request. i.e ?query=search&parameters=search string. Same keys will group values as an Array.
 }
 ```
 
@@ -183,6 +185,19 @@ const app = context({
 });
 ```
 
+---
+
+## <a name="scroll-reset" href="#scroll-reset">Scroll reset</a>
+By default the router will scroll back top on every route change. You can toggle it off if you want to implement your own scroll behaviour or want to load the component in place, as is.
+
+Like linkBase that setting is defined on the Router class.
+```js
+Router.scrollReset = false;
+```
+or with the `setScrollReset` function. 
+```js
+Router.setScrollReset(false);
+```
 ---
 
 ## <a name="state-object" href="#state-object">State object</a>
@@ -270,7 +285,8 @@ The `RouterComponent` takes optional slot argument and exposes both the `compone
 ``` 
 If you want to customize the implementation and perhaps add transitions or animations you can do so by using the exposed variables and utilizing the a `svelte:component` element.
 
-> **NOTE** that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
+> #### NOTE
+that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
 
 ```html
 <script>
@@ -395,42 +411,39 @@ destroy();
 --- 
 
 ## <a name="quick-usage" href="#quick-usage">Quick usage</a>
-```js
-import { context } from 'svelte-standalone-router';
-
-// import components
-import Index from './index.svelte';
-import Subpage from './subpage.svelte';
-
-// initialize router 
-export const app = context({
-  initial: location.pathname
-});
-
-// define general fallback
-app.catch((req, res) => {
-  console.log('Catching all routes');
-});
-// sample middleware
-app.use((req, res, next) => {
-  console.log('A logger middleware');
-  next();
-});
-
-// root route
-app.get('/', (req, res) => {
-  res.send(Index, { slug: 'index' });
-});
-
-// subroute with parameter
-app.get('/:slug', (req, res) => {
-  res.send(Subpage, { slug: req.params.slug });
-});
-```
 
 ```html
 <script>
-  import RouterComponent from 'svelte-standalone-router';
+  import RouterComponent, { context } from 'svelte-standalone-router';
+
+  // import components
+  import Index from './index.svelte';
+  import Subpage from './subpage.svelte';
+
+  // initialize router 
+  export const app = context({
+    initial: location.pathname
+  });
+
+  // define general fallback
+  app.catch((req, res) => {
+    console.log('Catching all routes');
+  });
+  // sample middleware
+  app.use((req, res, next) => {
+    console.log('A logger middleware');
+    next();
+  });
+
+  // root route
+  app.get('/', (req, res) => {
+    res.send(Index, { slug: 'index' });
+  });
+
+  // subroute with parameter
+  app.get('/:slug', (req, res) => {
+    res.send(Subpage, { slug: req.params.slug });
+  });
 </script>
 
 <RouterComponent let:component let:props>
