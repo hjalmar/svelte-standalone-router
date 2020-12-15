@@ -139,7 +139,7 @@ Request{
 The response object is responsible for handling the response. Currently you can send the component and its props to the router or as an error.
 ```js
 Response{
-  send : Function(Component : svelte-component|{ Component : svelte-component, force : Boolean} : Object, props : Object)
+  send : Function(Component : svelte-component, props : Object)
   error : Function(props : Object)
 }
 ```
