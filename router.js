@@ -24,7 +24,7 @@ const popstateHandler = async e => {
     endEarly = true;
   }
   
-  // if the hash is empty and the pathname is undefined (as it initially is) or the has doesn't match and the pathname and query parameters is the same, end early and scroll to the top 
+  // if the hash is empty and not the same as the previous and it's on the same url we don't want to load a new page, then we simply end early and scroll to the top.
   if(window.location.hash == '' && window.location.hash != prev.location.hash && sameURL){
     endEarly = true;
     window.scrollTo({ top: 0 });
