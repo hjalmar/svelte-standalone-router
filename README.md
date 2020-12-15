@@ -190,7 +190,7 @@ const app = context({
 ## <a name="scroll-reset" href="#scroll-reset">Scroll reset</a>
 By default the router will scroll back top on every route change. You can toggle it off if you want to implement your own scroll behaviour or want to load the component in place, as is.
 
-Like linkBase that setting is defined on the Router class.
+Like linkBase, that setting is statically defined on the Router class.
 ```js
 Router.scrollReset = false;
 ```
