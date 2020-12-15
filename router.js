@@ -1,53 +1,44 @@
 import Router from './SvelteStandaloneRouter.js';
-import { tick } from 'svelte';
 import { writable } from 'svelte/store';
 
-export let prevLocation = { ...window.location, firstLoad: false };
+export let prev = { location: { ...window.location }, firstLoad: false };
 export let contexts = new Map();
 export let location = writable();
+
 let initialized = false;
 let firstLoad = false;
+
 // handle the linkBase in pathname
 const getPathname = (path) => {
   const re = new RegExp(`^${Router.linkBase}`, 'i');
   path = `/${path}/`.replace(/[\/]+/g, '/').replace(re, '').replace(/^\/|\/$/g, '');
   return '/' + path;
 }
+
 // the popstate callback handler
 const popstateHandler = async e => {
-  // if the location.hash is defined we don't want to execute any routing
-  // if we are on the same route. Then we simply want to jump to that section
-  // using the proper browser behaviour
-  if(window.location.hash != '' && window.location.pathname == prevLocation.pathname){
-    return;
+  let endEarly = false;
+  const sameURL = prev.location.pathname == window.location.pathname && prev.location.search == window.location.search;
+  // don't continue if we are doing internal hash linking
+  if(window.location.hash != '' && sameURL && prev.firstLoad){
+    endEarly = true;
   }
-  // mark that we have already had our first load to prevent unwanted triggers when 
-  // it's not forced manually by the user.
-  prevLocation.firstLoad = true;
-
-  // reset the scroll position depending on the static scrollReset value
-  if(Router.scrollReset){
-    // always start from the top of the page
+  
+  // if the hash is empty and the pathname is undefined (as it initially is) or the has doesn't match and the pathname and query parameters is the same, end early and scroll to the top 
+  if(window.location.hash == '' && window.location.hash != prev.location.hash && sameURL){
+    endEarly = true;
     window.scrollTo({ top: 0 });
-    // we need to await atick here so the sroll even finishes
-    await tick();
   }
 
-  // update location and execute the router contexts
-  location.set(getPathname(window.location.pathname));
-  contexts.forEach(context => context.router.execute(window.location.pathname, e.detail));
-  // keep the previous location history
-  prevLocation = { ...prevLocation, ...window.location };
-  // wait for the current tick so we know the dom is loaded
-  await tick();
-  const target = window.location.hash.slice(1);
-  if(target){
-    const element = document.querySelector(`a[name="${target}"], #${target}`);
-    if(element){
-      const topPos = element.getBoundingClientRect().top + window.pageYOffset;
-      window.scrollTo({ top: topPos });
-    }
+  // if we don't end early we want to update the router contexts
+  if(!endEarly){
+    // update location and execute the router contexts
+    location.set(getPathname(window.location.pathname));
+    contexts.forEach(context => context.router.execute(window.location.pathname, e.detail));
   }
+
+  // update the prev data
+  prev.location = { ...window.location };
 };
 
 // if the popstate listener has been destroy 'mount' re-adds the listener 
@@ -69,12 +60,12 @@ export const destroy = () => {
   window.removeEventListener('popstate', popstateHandler);
 }
 
-// mount on the first load to avoid having 
-// the user doing it manually
-mount();
-
 // export the context creator "wrapper"
 export default (options) => {
+  // mount on the first load to avoid having 
+  // the user doing it manually
+  mount();
+  // creates a new context
   const router = new Router(options);
   contexts.set(router, {
     component: writable(),
