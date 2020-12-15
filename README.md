@@ -414,6 +414,7 @@ destroy();
 
 ```html
 <script>
+  import { fade } from 'svelte/transition';
   import RouterComponent, { context } from 'svelte-standalone-router';
 
   // import components
