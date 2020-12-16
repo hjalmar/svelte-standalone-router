@@ -1,6 +1,6 @@
 <script>
   import { onDestroy } from 'svelte';
-  import { link, Redirect } from 'svelte-standalone-router';
+  import { link, Redirect, Router } from 'svelte-standalone-router';
   export let time = 10;
   const interval = setInterval(() => {
     time--;
@@ -18,5 +18,5 @@
 <button href="/" use:link={{ state: { type: 'click' } }}>Go back home ({time})</button>
 
 {#if !time}
-  <Redirect to="/" state={{ type: 'redirect' }} />
+  <Redirect to="{Router.linkBase}" state={{ type: 'redirect' }} />
 {/if}
