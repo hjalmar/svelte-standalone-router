@@ -251,7 +251,7 @@ app.use((req, res, next) => {
   if(auth){
     return next();
   }
-  res.error({ message: 'Unatutorized' });
+  res.error({ message: 'Unauthorized' });
 });
 ```
 
@@ -262,7 +262,7 @@ const hasAuth = (req, res, next) => {
   if(auth){
     return next();
   }
-  res.error({ message: 'Unatutorized' });
+  res.error({ message: 'Unauthorized' });
 }
 
 // applying the middleware to a route

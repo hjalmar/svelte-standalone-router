@@ -1,0 +1,20 @@
+<script>
+  import Doc from '../../README.md';
+</script>
+
+<div class="markdown">
+  <Doc />
+</div>
+
+<style>
+  .markdown :global(a[name]){
+    position: relative;
+    text-decoration: none;
+  }
+  .markdown :global(a[name]::before){
+    position: absolute;
+    left: -20px;
+    content: '\00B6';
+    color: #c6c7ba;
+  }
+</style>
