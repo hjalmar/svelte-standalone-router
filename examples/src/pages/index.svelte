@@ -12,5 +12,5 @@
 <button use:link={{to: '/usage'}}>Usage examples</button>
 
 <h2>Support</h2>
-<p>Do you like this project and feel it's beneficial to you and your work? A small coffe tip is always appreciated, but not required.</p>
+<p>Do you like this project and feel it's beneficial to you and your work? A small coffee tip is always appreciated, but not required.</p>
 <a class="button" href="https://www.paypal.me/jenshjalmarsson">Tip on paypal</a>
