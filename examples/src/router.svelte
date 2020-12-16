@@ -11,9 +11,14 @@
 
   const pages = { Index, Documentation, Usage, Contact };
 
+  // get the href attribute from <Base> element.
+  // we use getAttribute('href') so we don't get the absolute url
+  Router.linkBase = document.querySelector('base').getAttribute('href');
+  
   // implementaiton
   const app = context({
     initial: location.pathname,
+    base: Router.linkBase,
     state: { what: 'is state' }
   });
   

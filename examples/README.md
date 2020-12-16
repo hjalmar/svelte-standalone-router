@@ -1,13 +1,13 @@
 # Usage examples
 Boilerplate examples to quickly get you started with implementing svelte-standalone-router in your project.
 
-### <a name="installation" href="#installation">Installation</a>
+### <a name="installation" href="usage#installation">Installation</a>
 Start by installing the library in your svelte project.
 ```js
 npm i -D svelte-standalone-router
 ```
 
-### <a name="basic" href="#basic">Basic</a>
+### <a name="basic" href="usage#basic">Basic</a>
 Minimal example with static routes
 ```html
 <!-- component.svelte -->
@@ -37,7 +37,7 @@ Minimal example with static routes
 </main>
 ```
 
-### <a name="advanced" href="#advanced">Advanced example</a>
+### <a name="advanced" href="usage#advanced">Advanced example</a>
 A more complex example showing how to preload data and decoupling business logic from the component and how to add a transition on route change by utilizing sveltes `#key` along with slotted parameters.
 ```html
 <!-- component.svelte -->
