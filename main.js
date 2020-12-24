@@ -1,4 +1,4 @@
-import Router from './SvelteStandaloneRouter.js';
+import { Router } from './SvelteStandaloneRouter.js';
 import context, { location, mount, destroy } from './router.js';
 import RouterComponent from './router.svelte';
 import link from './link.js';
@@ -12,7 +12,7 @@ export default RouterComponent;
 
 // js implementations
 export { 
-  // svelte components
+  // Router globals
   Router,
   // api
   context,
@@ -23,7 +23,7 @@ export {
   // helpers
   redirect,
   navigate,
-  // component helpers
+  // svelte components
   Redirect,
   Navigate,
  };
