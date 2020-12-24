@@ -1,5 +1,4 @@
-import Router from './SvelteStandaloneRouter.js';
-import { navigate, redirect } from './helpers.js';
+import { navigate, redirect, cleanURL } from './helpers.js';
 
 export default (element, props) => {
   props = {
@@ -16,8 +15,8 @@ export default (element, props) => {
       return;
     }
     e.preventDefault();
-    // replace all duplicate '/' that might be going on
-    const href = `/${Router.linkBase}/${url}`.replace(/[\/]+/g, '/');
+    // cleanup the url
+    const href = cleanURL(url);
     if(!href){
       return;
     }
