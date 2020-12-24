@@ -159,7 +159,7 @@ const app = context({
 
 This does not reflect the `linkBase`. It's implementation is separated due to the instances where you don't want the `use:link` action directive to reflect that, and the reason why they both aren't affected by setting the base property.
 
-The linkBase is statically defined on the Router object. This will make all helpers like `navigate`, `redirect` and `link` prefix everything under `/project`. 
+The linkBase is set on the router-settings object. This will make all helpers like `navigate`, `redirect` and `link` prefix everything under `/project`. 
 ```js
 Router.linkBase = '/project';
 ```
@@ -170,7 +170,7 @@ const app = context({
   base: Router.linkBase = '/project';
 });
 ```
-Or how about dynamically depending on the base of your inde.html
+Or how about dynamically depending on the base of your index.html
 
 Since setting the linkBase returns the just defined string you can combine it with the base property.
 ```js

@@ -1,32 +1,37 @@
-import Router from 'standalone-router';
+import StandaloneRouter from 'standalone-router';
 export class SvelteStandaloneRouterError extends Error{}
-export default class SvelteRouter extends Router{
-  static __linkBase = '';
-  static setLinkBase(value){
+export default class SvelteRouter extends StandaloneRouter{}
+
+// setting a singleton class with properties for 'global' access
+export let Router = new class RouterProperties{
+  constructor(){
+    this.__linkBase = '';
+    this.__scrollReset = true;
+  }
+  setLinkBase(value){
     if(typeof value != 'string'){
       throw new SvelteStandaloneRouterError(`Invalid 'linkBase'. Expecting value of type 'string'`);
     }
-    return SvelteRouter.__linkBase = value;
+    return this.__linkBase = value;
   }
-  static set linkBase(value){
-    return SvelteRouter.setLinkBase(value);
+  set linkBase(value){
+    return this.setLinkBase(value);
   }
-  static get linkBase(){
-    return SvelteRouter.__linkBase;
+  get linkBase(){
+    return this.__linkBase;
   }
-
+  
   // handle scroll reset
-  static __scrollReset = true;
-  static setScrollReset(value){
+  setScrollReset(value){
     if(typeof value != 'boolean'){
       throw new SvelteStandaloneRouterError(`Invalid 'scrollReset'. Expecting value of type 'boolean'`);
     }
-    return SvelteRouter.__scrollReset = value;
+    return this.__scrollReset = value;
   }
-  static set scrollReset(value){
-    return SvelteRouter.setScrollReset(value);
+  set scrollReset(value){
+    return this.setScrollReset(value);
   }
-  static get scrollReset(){
-    return SvelteRouter.__scrollReset;
+  get scrollReset(){
+    return this.__scrollReset;
   }
-}
+} 
