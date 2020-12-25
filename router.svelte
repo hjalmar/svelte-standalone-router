@@ -1,13 +1,13 @@
 <script>
   import { tick } from 'svelte';
-  import Router, { SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
+  import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
   import { contexts, prev } from './router.js';
 
   // as default get the first value from the contexts since a Map remembers the insertion 
   // order. this works as a way to fallback to the first context if none is provided
   export let context = contexts.keys().next().value;
   
-  if(!context || !(context instanceof Router)){
+  if(!context || !(context instanceof RouterContext)){
     throw new Error(`Invalid Router context. Did you initialize the component with a valid context?`);
   }
   const { component } = contexts.get(context);
