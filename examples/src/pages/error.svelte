@@ -18,5 +18,5 @@
 <button href="/" use:link={{ state: { type: 'click' } }}>Go back home ({time})</button>
 
 {#if !time}
-  <Redirect to="{Router.linkBase}" state={{ type: 'redirect' }} />
+  <Redirect to="/" state={{ type: 'redirect' }} />
 {/if}
