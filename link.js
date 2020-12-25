@@ -1,4 +1,4 @@
-import { navigate, redirect, cleanURL } from './helpers.js';
+import { navigate, redirect } from './helpers.js';
 
 export default (element, props) => {
   props = {
