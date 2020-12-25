@@ -15,15 +15,10 @@ export default (element, props) => {
       return;
     }
     e.preventDefault();
-    // cleanup the url
-    const href = cleanURL(url);
-    if(!href){
-      return;
-    }
     if(props.type == 'navigate'){
-      navigate(href, props.state, props.title);
+      navigate(url, props.state, props.title);
     }else if(props.type == 'redirect'){
-      redirect(href, props.state, props.title);
+      redirect(url, props.state, props.title);
     }else{
       console.warn(`Invalid 'use:link' type. Expecting 'navigate'(default) or 'redirect'`);
       return;
