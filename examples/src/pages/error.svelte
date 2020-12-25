@@ -1,6 +1,6 @@
 <script>
   import { onDestroy } from 'svelte';
-  import { link, Redirect, Router } from 'svelte-standalone-router';
+  import { link, Redirect } from 'svelte-standalone-router';
   export let time = 10;
   const interval = setInterval(() => {
     time--;

@@ -1,4 +1,4 @@
-import Router from './SvelteStandaloneRouter.js';
+import RouterContext, { Router } from './SvelteStandaloneRouter.js';
 import { writable } from 'svelte/store';
 
 export let prev = { location: { ...window.location }, firstLoad: false };
@@ -66,7 +66,7 @@ export default (options) => {
   // the user doing it manually
   mount();
   // creates a new context
-  const router = new Router(options);
+  const router = new RouterContext(options);
   contexts.set(router, {
     component: writable(),
     router
