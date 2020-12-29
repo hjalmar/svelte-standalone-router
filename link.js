@@ -26,7 +26,12 @@ export default (element, props) => {
   }
   element.addEventListener('click', clickHandler);
   return {
-    update(parameters){},
+    update(parameters){
+      props = {
+        ...props,
+        ...parameters
+      }
+    },
     destroy(){element.removeEventListener('click', clickHandler);}
   }
 }
