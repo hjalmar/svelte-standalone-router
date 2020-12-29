@@ -22,5 +22,9 @@ export const redirect = (url, state = {}) => {
   dispatch({ url, state });
 }
 
+// change url without any action
+export const replace = (url, state = {}) => {
+  history.pushState(state, '', cleanURL(url));
+}
 // replace all duplicate '/' that might be going on
 export const cleanURL = (url) => `/${Router.linkBase}/${url}`.replace(/[\/]+/g, '/');
