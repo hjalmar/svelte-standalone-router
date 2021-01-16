@@ -10,22 +10,26 @@ Unlike the standalone router the implementation is done within a svelte componen
 ## <a name="library-implementation" href="documentation#library-implementation">Library implementation</a>
 Components and utilities the library exposes. As per the svelte specs all svelte components are Capitalized. 
 ```js
-import RouterComponent, { context, link, navigate, redirect, location, mount, destroy Router, Navigate, Redirect } from 'svelte-standalone-router';
+import RouterComponent, { context, link, navigate, redirect, replace, alter, location, mount, destroy Router, Navigate, Redirect, Replace, Alter } from 'svelte-standalone-router';
 ```
 
 ```
 svelte-standalone-router {
   RouterComponent : svelte-component
   context : Function // creates a new router context
-  link : svelte-action // Action directive used on 'a' tags. Uses 'href' attribute as path
-  navigate(path : String ) : // push state 
-  redirect(path : String) : // replace state
+  link : svelte-action // Action directive used on 'a' tags.
+  navigate(path : String, state : Object ) : // push to History 
+  redirect(path : String, state : Object ) : // replace History
+  replace(path : String, state : Object ) : // change url push To History 
+  alter(path : String, state : Object ) : // replace url replace History
   location : svelte-store
   mount() : Function // add popstate listener (it has to have been destroyed before being able to be added again)
   destroy() : Function //destroy current listener for popstate event
   Router : class SvelteStandaloneRouter (inherited from standalone-router library) 
   Navigate : svelte-component // to navigate to a route
   Redirect : svelte-component // to redirect to a route
+  Replace : svelte-component // to replace a route
+  Alter : svelte-component // to alter a route
 }
 ```
 
@@ -67,8 +71,7 @@ app.get('/', (req, res) => {
 
 Let's try a more advanced route with dynamic parameters. The route is separated in sections by `/`, like a directory structure. Each part can use a dynamic parameter which gets exposed on the `req.params` object.
 
-> #### NOTE 
-A dynamic parameter catches everything for it's section and cannot be combined with or placed within a string. It has to start with a `:`, so a route like this `/articles/article-title-:id` is therefore invalid, by design! 
+> **NOTE:** A dynamic parameter catches everything for it's section and cannot be combined with or placed within a string. It has to start with a `:`, so a route like this `/articles/article-title-:id` is therefore invalid, by design! 
 
 ```js
 app.get('/articles/:id', (req, res) => {
@@ -86,8 +89,7 @@ app.get('/:slug->about', (req, res) => {
 ```
 So far all routes have been explicit, meaning the route has matched from start to end. To make a route implicit you add a `*` to the end of the route. 
 
-> #### NOTE 
-`*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
+> **NOTE:** `*` is not a wildcard you can place in the middle of the string. It is placed at the end to mark where it match up until and then anything else after that. So it's important in what order the routes are defined due to no ranking system in place in the library
 
 This will match a route like `/articles/10` and `/articles/20/what-is-up-with-2020`. It will explicitly match up until the `:id` and then everything else.
 ```js
@@ -114,7 +116,7 @@ app.get('/pages', (req, res) => {
 .get('contact', (req, res) => { /* do something */ });
 ```
 
-Or to catch all requests. the route is actually '*' so it catches everything. It is nothing more than a shorthand implementation for `app.get('/*', (req, res) => ...)`.
+Or to catch all requests. the route is actually '\*' so it catches everything. It is nothing more than a shorthand implementation for `app.get('/*', (req, res) => ...)`.
 ```js
 app.get((req, res) => {
   res.send(SvelteComponent);
@@ -266,7 +268,7 @@ const hasAuth = (req, res, next) => {
 }
 
 // applying the middleware to a route
-app.get('/user'. hasAuth, (req, res) => {
+app.get('/user', hasAuth, (req, res) => {
   res.send(Component)
 });
 ```
@@ -285,8 +287,7 @@ The `RouterComponent` takes optional slot argument and exposes both the `compone
 ``` 
 If you want to customize the implementation and perhaps add transitions or animations you can do so by using the exposed variables and utilizing the a `svelte:component` element.
 
-> #### NOTE
-that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
+> **NOTE:** that svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
 
 ```html
 <script>
@@ -356,7 +357,7 @@ app.get('/article', (req, res) => {
 The link implementation options.
 ```js
 LinkOptions {
-  type : String('navigate(default)|redirect')
+  type : String('navigate(default)|redirect|replace|alter')
   state : Object
   to : String
   href : String
@@ -374,25 +375,31 @@ Adding active class on active routes. The current location is stored in a svelte
 ```
 
 ### <a name="programmatically-changing-routes" href="documentation#programmatically-changing-routes">Programmatically changing routes</a>
-To programmatically navigate or redirect you have two functions to your exposure. The difference between the two is that `navigate` adds a record to the `History` object which means you can go back and forth in the history, while redirect does not add a record it just changes the current url.  
+To programmatically navigate or redirect you have two functions to your exposure. The difference between the two is that `navigate` adds a record to the `History` object which means you can go back and forth in the history, while `redirect` does not add a record, it just changes the current url. 
+
+For instances where one wants to change the url without triggering a route change there is the `replace` and `alter` methods. Where `replace` will change the url and add a record to the History object and `alter` will change the url but don't add a record on the History object.
 
 The helper implementation arguments
 ```
 navigate(url : String, state : Object);
 redirect(url : String, state : Object);
+replace(url : String, state : Object);
+alter(url : String, state : Object);
 ```
 ```js
-  import { navigate, redirect } from 'svelte-standalone-router';
-  navigate('/subpage');
-  redirect('/subpage');
+import { navigate, redirect, replace, alter } from 'svelte-standalone-router';
+navigate('/subpage');
+redirect('/subpage');
+replace('/subpage');
+alter('/subpage');
 ```
 
-There also exists a `Navigate` and `Redirect` svelte components which is more in tune with how a frontend library would do it. You can differentiate it by the fact that svelte-components needs to be Capitalized.
+There also exists a `Navigate`, `Redirect`, `Replace` and `Alter` svelte components that implement the same logic as the link/navigation methods. You can differentiate it by the fact that svelte-components needs to be Capitalized.
 
 Like the link action you can use either `to` or `href` with the to prop having precedence. The components implement the helper functions so you can optionally pass a state prop.
 ```html
 <script>
-  import { Navigate, Redirect } from 'svelte-standalone-router';
+  import { Navigate, Redirect, Replace, Alter } from 'svelte-standalone-router';
 </script>
 
 {#if !expression}
