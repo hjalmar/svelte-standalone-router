@@ -1,4 +1,4 @@
-import { navigate, redirect } from './helpers.js';
+import { navigate, redirect, replace, alter } from './helpers.js';
 
 export default (element, props) => {
   props = {
@@ -19,14 +19,23 @@ export default (element, props) => {
       navigate(url, props.state, props.title);
     }else if(props.type == 'redirect'){
       redirect(url, props.state, props.title);
+    }else if(props.type == 'replace'){
+      replace(url, props.state, props.title);
+    }else if(props.type == 'alter'){
+      alter(url, props.state, props.title);
     }else{
-      console.warn(`Invalid 'use:link' type. Expecting 'navigate'(default) or 'redirect'`);
+      console.warn(`Invalid 'use:link' type. Expecting 'navigate'(default), 'redirect', 'replace' or 'alter'`);
       return;
     }
   }
   element.addEventListener('click', clickHandler);
   return {
-    update(parameters){},
+    update(parameters){
+      props = {
+        ...props,
+        ...parameters
+      }
+    },
     destroy(){element.removeEventListener('click', clickHandler);}
   }
 }
