@@ -1,5 +1,5 @@
 import RouterContext, { Router } from './SvelteStandaloneRouter.js';
-import { internalGoTo } from './helpers.js';
+import { internalGoTo, getPathname } from './helpers.js';
 import { writable } from 'svelte/store';
 
 export let prev = { location: { ...window.location }, firstLoad: false };
@@ -8,13 +8,6 @@ export let location = writable();
 
 let initialized = false;
 let firstLoad = false;
-
-// handle the linkBase in pathname
-export const getPathname = (path) => {
-  const re = new RegExp(`^${Router.linkBase}`, 'i');
-  path = `/${path}/`.replace(/[\/]+/g, '/').replace(re, '').replace(/^\/|\/$/g, '');
-  return '/' + path;
-}
 
 // handle internal # links
 const internalLinksHandler = (e) => {

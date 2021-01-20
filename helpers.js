@@ -1,5 +1,11 @@
 import { Router } from './SvelteStandaloneRouter.js';
-import { getPathname } from './router.js';
+
+// handle the linkBase in pathname
+export const getPathname = (path) => {
+  const re = new RegExp(`^${Router.linkBase}`, 'i');
+  path = `/${path}/`.replace(/[\/]+/g, '/').replace(re, '').replace(/^\/|\/$/g, '');
+  return '/' + path;
+}
 
 // dispatch custom event
 const dispatch = ({ state }) => {
