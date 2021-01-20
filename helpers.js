@@ -1,5 +1,4 @@
 import { Router } from './SvelteStandaloneRouter.js';
-import { getPathname } from './router.js';
 
 // dispatch custom event
 const dispatch = ({ state }) => {
@@ -39,7 +38,7 @@ export const cleanURL = (url) => `/${Router.linkBase}/${url}`.replace(/[\/]+/g, 
 
 // internal goto helper 
 export const internalGoTo = (path, e) => {
-  replace(getPathname(path));
+  replace(path);
   const hash = window.location.hash.slice(1);
   if(hash){
     if(e){

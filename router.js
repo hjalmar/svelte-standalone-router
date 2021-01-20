@@ -10,7 +10,7 @@ let initialized = false;
 let firstLoad = false;
 
 // handle the linkBase in pathname
-export const getPathname = (path) => {
+const getPathname = (path) => {
   const re = new RegExp(`^${Router.linkBase}`, 'i');
   path = `/${path}/`.replace(/[\/]+/g, '/').replace(re, '').replace(/^\/|\/$/g, '');
   return '/' + path;
