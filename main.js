@@ -2,6 +2,7 @@ import { Router } from './SvelteStandaloneRouter.js';
 import context, { location, mount, destroy } from './router.js';
 import RouterComponent from './router.svelte';
 import link from './link.js';
+import decorator from './decorator.js';
 import { redirect, navigate, replace, alter } from './helpers.js';
 
 import Redirect from './redirect.svelte';
@@ -22,6 +23,7 @@ export {
   location,
   mount, 
   destroy,
+  decorator,
   // helpers
   redirect,
   navigate,
