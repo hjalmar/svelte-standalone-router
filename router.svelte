@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from 'svelte';
+  import { onMount } from 'svelte';
   import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
   import { contexts, prev } from './router.js';
   import { internalGoTo } from './helpers.js';
@@ -46,7 +46,7 @@
     // take some time before finishing, and sveltes tick does not
     // register it, perhaps because it's a scroll event? either way
     // back of the call-stack and it works as expected.
-    setTimeout(_ => internalGoTo(window.location.pathname), 0);
+    setTimeout(_ => internalGoTo(window.location.pathname + window.location.hash), 0);
   })
 </script>
 

@@ -21,7 +21,7 @@ const internalLinksHandler = (e) => {
   const target = e.target;
   if(target.tagName == 'A'){
     const href = target.getAttribute('href');
-    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href))){
+    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && href.indexOf('#') > -1){
       // update the prev data
       internalGoTo(href, e);
       prev.location = { ...window.location };
