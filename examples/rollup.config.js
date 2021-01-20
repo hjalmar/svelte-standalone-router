@@ -5,6 +5,8 @@ import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import css from 'rollup-plugin-css-only';
 import { mdsvex } from "mdsvex";
+import Prism from 'prismjs';
+import 'prism-svelte';
 
 const production = !process.env.ROLLUP_WATCH;
 
@@ -49,6 +51,16 @@ export default {
         '.md'
       ],
       preprocess: mdsvex({
+
+          highlight: function (str, lang) {
+            console.log('aah')
+            if (lang && lang in Prism.languages) {
+              try {
+                return Prism.highlight(str, Prism.languages[lang], lang);
+              } catch(__) {}
+            }
+            return '';
+          },
         extensions: ['.svx', '.md']
       }),
 		}),

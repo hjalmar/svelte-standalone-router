@@ -94,7 +94,7 @@
     padding: 10rem;
   }
   article :global(hr){
-    margin: 80rem 0;
+    margin: 60rem 0;
   }
   li::after, article :global(hr){
     content: '';

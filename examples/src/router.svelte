@@ -31,7 +31,7 @@
  
   // catch fallbacks
   app.catch((req, res, props) => res.send(Error, { time: 5 }));
-  
+
   // decorators
   const main = decorator(_main);
   main('/', (req, res) => res.send(Index));
