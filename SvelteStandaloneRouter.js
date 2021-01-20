@@ -7,6 +7,7 @@ export let Router = new class RouterProperties{
   constructor(){
     this.__linkBase = '';
     this.__scrollReset = true;
+    this.__scrollOffset = 0;
   }
   setLinkBase(value){
     if(typeof value != 'string'){
@@ -33,5 +34,19 @@ export let Router = new class RouterProperties{
   }
   get scrollReset(){
     return this.__scrollReset;
+  }
+
+  // handle scroll reset
+  setScrollOffset(value){
+    if(typeof value != 'number'){
+      throw new SvelteStandaloneRouterError(`Invalid 'scrollOffset'. Expecting value of type 'number'`);
+    }
+    return this.__scrollOffset = value;
+  }
+  set scrollOffset(value){
+    return this.setScrollOffset(value);
+  }
+  get scrollOffset(){
+    return this.__scrollOffset;
   }
 } 
