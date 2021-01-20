@@ -1,4 +1,5 @@
 import RouterContext, { Router } from './SvelteStandaloneRouter.js';
+import { internalGoTo } from './helpers.js';
 import { writable } from 'svelte/store';
 
 export let prev = { location: { ...window.location }, firstLoad: false };
@@ -15,6 +16,19 @@ const getPathname = (path) => {
   return '/' + path;
 }
 
+// handle internal # links
+const internalLinksHandler = (e) => {
+  const target = e.target;
+  if(target.tagName == 'A'){
+    const href = target.getAttribute('href');
+    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href))){
+      // update the prev data
+      internalGoTo(href, e);
+      prev.location = { ...window.location };
+    }
+  }
+}
+
 // the popstate callback handler
 const popstateHandler = async e => {
   let endEarly = false;
@@ -23,8 +37,9 @@ const popstateHandler = async e => {
   if(window.location.hash != '' && sameURL && prev.firstLoad){
     endEarly = true;
   }
-  
-  // if the hash is empty and not the same as the previous and it's on the same url we don't want to load a new page, then we simply end early and scroll to the top.
+
+  // if the hash is empty and not the same as the previous and it's on the same url we 
+  // don't want to load a new page, then we simply end early and scroll to the top.
   if(window.location.hash == '' && window.location.hash != prev.location.hash && sameURL){
     endEarly = true;
     window.scrollTo({ top: 0 });
@@ -51,6 +66,7 @@ export const mount = async () => {
       location.set(getPathname(window.location.pathname));
     }
     window.addEventListener('popstate', popstateHandler);
+    window.addEventListener('click', internalLinksHandler);
   }
 }
 
@@ -58,6 +74,7 @@ export const mount = async () => {
 export const destroy = () => {
   initialized = false;
   window.removeEventListener('popstate', popstateHandler);
+  window.removeEventListener('click', internalLinksHandler);
 }
 
 // export the context creator "wrapper"

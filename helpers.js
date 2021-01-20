@@ -35,3 +35,19 @@ export const alter = (url, state = {}) => {
 
 // replace all duplicate '/' that might be going on
 export const cleanURL = (url) => `/${Router.linkBase}/${url}`.replace(/[\/]+/g, '/');
+
+// internal goto helper 
+export const internalGoTo = (path, e) => {
+  replace(path);
+  const hash = window.location.hash.slice(1);
+  if(hash){
+    if(e){
+      e.preventDefault();
+    }
+    const element = document.querySelector(`a[name="${hash}"], #${hash}`);
+    if(element){
+      const topPos = element.getBoundingClientRect().top + window.pageYOffset - Router.scrollOffset;
+      window.scrollTo({ top: topPos });
+    }
+  }
+}
