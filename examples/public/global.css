@@ -1,12 +1,56 @@
 @import "prism.css";
 
+:root{
+  /* general */
+  --scale: 1;
+  --content-max-width: 900px;
+
+  /* colors */
+  --color-light: rgb(196, 221, 250);
+  --color-medium: rgb(145, 186, 248);
+  --color-darker: rgb(81, 147, 247);
+  --color-orange: #f7642b;
+  --color-red: rgb(231, 40, 78);
+
+  /* main */
+  --background-color: rgb(29, 22, 44);
+
+  /* button */
+  --button-background-color: var(--color-red);
+  --button-text-color: rgb(236, 207, 207); 
+
+}
+
 *, ::before, ::after{
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  color: inherit;
   box-sizing: border-box;
+  scrollbar-color: var(--color-red) transparent;
+  scrollbar-width: thin;
 }
 
 ::selection{
-  background-color: #F3F4E6;
+  background-color: rgba(165, 199, 245, 0.116);
 }
+
+::-webkit-scrollbar{
+  width: 8px;
+  height: 7px;
+  background-color: rgba(0, 0, 0, 0.123);
+}
+::-webkit-scrollbar-corner{
+  background: transparent;
+}
+::-webkit-scrollbar-thumb{
+  background: var(--color-red);
+}
+/* ::-webkit-scrollbar-thumb:window-inactive{ 
+  background: var(--scroll-thumb);
+} */
+
+
 
 html, body {
 	position: relative;
@@ -14,54 +58,42 @@ html, body {
 	min-height: 100%;
 }
 
+html{
+  font-size: calc(var(--scale) * 1px);
+}
+
 body {
-  background: #F3F4E6;
-  color: #327584;
-	margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
   padding: 0;
+  background: var(--background-color);
+  font-size: 20rem;
+  color: var(--color-medium);
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   overflow-y: scroll;
 }
 
 a{
-	color: rgb(0, 0, 0);
-  text-decoration: underline;
-  font-weight: bold;
-}
-
-a:hover{
   text-decoration: none;
-}
-label {
-	display: block;
-}
-
-input, button, select, textarea {
-	font-family: inherit;
-	font-size: inherit;
-	-webkit-padding: 0.4em 0;
-	padding: 0.4em;
-	margin: 0 0 0.5em 0;
-	box-sizing: border-box;
-	border: 1px solid #ccc;
-	border-radius: 2px;
-}
-
-input:disabled {
-	color: #ccc;
 }
 
 button, .button {
-  display: inline-block;
-  padding: 13px 25px;
-	color: white;
-	background-color: #327584;
+  display: inline-flex;
+  padding: 13rem 25rem;
+  font-size: 20rem;
+	color: var(--button-text-color);
+	background-color: var(--button-background-color);
   border: none;
-  border-radius: 4px;
+  border-radius: 50px;
   outline: none;
   cursor: pointer;
   text-decoration: none;
   font-weight: normal;
+  line-height: 0;
+  align-items: center;
+  min-height: 50px;
 }
 
 button:disabled {
@@ -77,11 +109,30 @@ button:focus {
 }
 
 h1, h2, h3, h4, h5, h6{
-  color: #0A1C22;
+  color: var(--color-light);
+}
+
+h1{
+  font-size: 60rem;
+  color: var(--color-red);
+}
+
+h2{
+  font-size: 40rem;
+}
+
+h3{
+  font-size: 30rem;
+}
+
+p, blockquote{
+  margin: 30rem 0;
+  line-height: 35rem;
 }
 
 pre{
   padding: 20px;
   background-color: rgb(237, 237, 237);
-  overflow-x: auto;
+  overflow-x: auto !important;
+  max-width: 100%;
 }

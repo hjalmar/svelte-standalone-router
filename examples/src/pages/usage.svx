@@ -14,7 +14,7 @@
   .markdown :global(a[name]::before){
     position: absolute;
     left: -20px;
-    content: '\00B6';
+    content: '\00A7';
     color: #c6c7ba;
   }
 </style>

@@ -1,48 +1,46 @@
 <script>
   import { fade } from 'svelte/transition';
-  import RouterComponent, { context, Router } from 'svelte-standalone-router';
+  import RouterComponent, { context, Router, decorator } from 'svelte-standalone-router';
+
+  // _layouts
+  import _error from './_layout/_error.svelte';
+  import _main from './_layout/_main.svelte';
+  import _documentation from './_layout/_documentation.svelte';
 
   // pages
   import Index from './pages/index.svelte';
-  import Documentation from './documentation.svx';
+  import Documentation from './pages/documentation.svx';
   import Usage from './pages/usage.svx';
   import Contact from './pages/contact.svelte';
   import Error from './pages/error.svelte';
 
-  const pages = { Index, Documentation, Usage, Contact };
+
+  // individual pages
+  const pages = { Usage, Contact };
 
   // get the href attribute from <Base> element.
   // we use getAttribute('href') so we don't get the absolute url
   Router.linkBase = document.querySelector('base').getAttribute('href');
+  Router.scrollOffset = 100;
   
   // implementaiton
   const app = context({
     initial: location.pathname,
     base: Router.linkBase,
-    state: { what: 'is state' }
   });
-  
+ 
   // catch fallbacks
   app.catch((req, res, props) => res.send(Error, { time: 5 }));
+  
+  // decorators
+  const main = decorator(_main);
+  main('/', (req, res) => res.send(Index));
+  // documentation
+  const documentation = decorator(_documentation);
+  documentation('/how-to/documentation', (req, res) => res.send(Documentation));
+  documentation('/how-to/usage', (req, res) => res.send(Usage));
 
-  // middlewares
-  app.use((req, res, next) => {
-    console.log('Middleware logging the Request object.');
-    console.log(req);
-    console.log('--------------------------------------');
-    console.log('');
-    next();
-  });
-
-  // routes
-  app.get(['/', '/:page'], async (req, res) => {
-    // simulate an api request
-    // await new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 1000);
-    // });
-
+  main('/:page', (req, res) => {
     const string = req.params.page;
     const p = pages[(string && string.charAt(0).toUpperCase() + string.slice(1)) || 'Index'];
     if(!p){
@@ -52,20 +50,14 @@
   });
 </script>
 
-<RouterComponent let:component let:props>
+<RouterComponent let:decorator let:component let:props>
   {#key component}
-    <div class="router" in:fade={{ duration: 300 }}>
-      <svelte:component this={component} {...props} />
-    </div>
+    {#if decorator}
+      <svelte:component this={decorator}>
+        <div in:fade><svelte:component this={component} {...props}></svelte:component></div>
+      </svelte:component>
+    {:else}
+      <div in:fade><svelte:component this={component} {...props}></svelte:component></div>
+    {/if}
   {/key}
 </RouterComponent>
-
-<style>
-  .router{
-    width: 100%;
-    max-width: 1500px;
-    padding: 50px 80px;
-    background-color: white;
-    border-radius: 4px;
-  }
-</style>

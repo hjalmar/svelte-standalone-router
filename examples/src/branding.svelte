@@ -120,8 +120,9 @@
 
 <style>
   svg{
+    height: 100%;
     width: 100%;
-    max-width: 150px;
+    max-width: 100px;
     fill: var(--fill);
   }
 </style>
