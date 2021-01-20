@@ -1,7 +1,8 @@
 <script>
-  import { tick } from 'svelte';
+  import { onMount, tick } from 'svelte';
   import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
   import { contexts, prev } from './router.js';
+  import { internalGoTo } from './helpers.js';
 
   // as default get the first value from the contexts since a Map remembers the insertion 
   // order. this works as a way to fallback to the first context if none is provided
@@ -11,9 +12,9 @@
     throw new Error(`Invalid Router context. Did you initialize the component with a valid context?`);
   }
   const { component } = contexts.get(context);
-  
+
   // store the current/previous pathname to compare with the next route that wants to get loaded 
-  context.subscribe(async (callback, props = {}) => {
+  context.subscribe(async (callback, props = {}, decorator) => {
     // a dirty check to see it is a "component". Since there is not way to check if it is a svelte component
     // this would atleast force it to be a function and will catch most errors where a svelte component isn't passed
     if(typeof callback != 'function'){
@@ -28,30 +29,35 @@
 
     // update the writable store
     component.set({
-      context: class extends callback{},
+      context: decorator ? callback : class extends callback{},
+      decorator: !decorator ? undefined : class extends decorator{},
       props
     });
-
-    // wait for the current tick so we know the dom is loaded
-    await tick();
-    const target = window.location.hash.slice(1);
-    if(target){
-      const element = document.querySelector(`a[name="${target}"], #${target}`);
-      if(element){
-        const topPos = element.getBoundingClientRect().top + window.pageYOffset;
-        window.scrollTo({ top: topPos });
-      }
-    }
 
     // flag that we have a first load
     if(!prev.firstLoad){
       prev.firstLoad = true;
     }
   });
+
+  onMount(() => {
+    // NOTE: we have to this settimeout hack to move the 
+    // execution to the end of the call stack. on load the #hash 
+    // take some time before finishing, and sveltes tick does not
+    // register it, perhaps because it's a scroll event? either way
+    // back of the call-stack and it works as expected.
+    setTimeout(_ => internalGoTo(window.location.pathname), 0);
+  })
 </script>
 
 {#if $component}
-  <slot component={$component.context} props={$component.props}>
-    <svelte:component this={$component.context} {...$component.props}></svelte:component>
+  <slot component={$component.context} decorator={$component.decorator} props={$component.props}>
+    {#if $component.decorator}
+      <svelte:component this={$component.decorator}>
+        <svelte:component this={$component.context} {...$component.props}></svelte:component>
+      </svelte:component>
+    {:else}
+      <svelte:component this={$component.context} {...$component.props}></svelte:component>
+    {/if}
   </slot>
 {/if}
