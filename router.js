@@ -17,7 +17,7 @@ const internalLinksHandler = (e) => {
     const isHashOnly = href.indexOf('#') > -1;
     if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && isHashOnly){
       // update the prev data
-      internalGoTo(isHashOnly ? window.location.pathname + href : href, e);
+      internalGoTo(href, e);
       prev.location = { ...window.location };
     }
   }
