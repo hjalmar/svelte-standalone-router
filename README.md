@@ -9,7 +9,7 @@ Unlike the standalone router the implementation is done within a svelte componen
 
 ---
 
-## <a name="library-implementation" href="how-to/documentation#library-implementation">Library implementation</a>
+## <a name="library-implementation" href="#library-implementation">Library implementation</a>
 Components and utilities the library exposes. As per the svelte specs all svelte components are Capitalized. 
 ```js
 import RouterComponent, { context, decorator, link, navigate, redirect, replace, alter, location, mount, destroy Router, Navigate, Redirect, Replace, Alter } from 'svelte-standalone-router';
@@ -38,7 +38,7 @@ svelte-standalone-router {
 
 ---
 
-## <a name="creating-a-router-context" href="how-to/documentation#creating-a-router-context">Creating a router context</a>
+## <a name="creating-a-router-context" href="#creating-a-router-context">Creating a router context</a>
 Most of the time you will only ever need one context, tho the ability to have several router contexts on the page at the same time is a possibility
 ```js
 // import context from library
@@ -53,7 +53,7 @@ const app = context({
 
 ---
 
-## <a name="adding-routes" href="how-to/documentation#adding-routes">Adding routes</a>
+## <a name="adding-routes" href="#adding-routes">Adding routes</a>
 Add get routes to your created context with the `get` method. The get method takes an argument `String` for the route, a undefined number of middlewares and lastly a callback for when the route matches. 
 
 A simple route that matches the root
@@ -130,7 +130,7 @@ app.get((req, res) => {
 
 ---
 
-## <a name="decorator" href="how-to/documentation#decorator">Decorators</a>
+## <a name="decorator" href="#decorator">Decorators</a>
 Decorators are routes that are wrapped inside a parent component. The interface for creating a decorator is almost identical to creating get routes.
 Let's start with a simple decorator route.
 
@@ -179,7 +179,7 @@ user.get('/settings', ...);
 
 ---
 
-## <a name="request-object" href="how-to/documentation#request-object">Request object</a>
+## <a name="request-object" href="#request-object">Request object</a>
 The request object exposes everything related to the request. This you can use to determin if you want to preload data, what component to load or error out when a request does not meet the requirements.
 ```js
 Request{
@@ -195,7 +195,7 @@ Request{
 
 ---
 
-## <a name="response-object" href="how-to/documentation#response-object">Response object</a>
+## <a name="response-object" href="#response-object">Response object</a>
 The response object is responsible for handling the response. Currently you can send the component and its props to the router or as an error.
 ```js
 Response{
@@ -206,7 +206,7 @@ Response{
 
 ---
 
-## <a name="base-and-linkbase" href="how-to/documentation#base-and-linkbase">Base and linkbase</a>
+## <a name="base-and-linkbase" href="#base-and-linkbase">Base and linkbase</a>
 If you are deploying your site to the root no extra configuration has to be done to make it work. But on the occasions where you want to deploy it under a subdirectory you would want to defined the `base` and or perhaps the `linkBase` to cater to that location.
 
 Let's start with base. Lets deploy our app under `/project`, so we would access our site under `https://example.com/project`.
@@ -247,7 +247,7 @@ const app = context({
 
 ---
 
-## <a name="scroll-reset" href="how-to/documentation#scroll-reset">Scroll reset</a>
+## <a name="scroll-reset" href="#scroll-reset">Scroll reset</a>
 By default the router will scroll back top on every route change. You can toggle it off if you want to implement your own scroll behaviour or want to load the component in place, as is.
 
 Like linkBase, that setting is statically defined on the Router class.
@@ -261,7 +261,7 @@ Router.setScrollReset(false);
 
 ---
 
-## <a name="scroll-offset" href="how-to/documentation#scroll-offset">Scroll offset</a>
+## <a name="scroll-offset" href="#scroll-offset">Scroll offset</a>
 Scroll offset is the offset applied after an internal hash-route has taken place. One might have a sticky header or some fixed overlapping element after scrolling which would overlap the content at the hash link destination. The offset value is defined on the `Router` instance and only accepts a `Number` as value.
 ```js
 Router.scrollOffset = 100;
@@ -273,7 +273,7 @@ Router.setScrollOffset(100);
 
 ---
 
-## <a name="state-object" href="how-to/documentation#state-object">State object</a>
+## <a name="state-object" href="#state-object">State object</a>
 On every request you can pass a states object and so does the initial request by the `state` property passed to the context creation.
 ```js
 // add custom state on the initial request
@@ -284,7 +284,7 @@ const app = context({
 ```
 ---
 
-## <a name="catching-errors" href="how-to/documentation#catching-errors">Catching errors</a>
+## <a name="catching-errors" href="#catching-errors">Catching errors</a>
 > At this point decorators only work on get routes. Hoping to add it to catch routes in future updates as well.
 
 Like routes you can catch errors with the `catch` method. The underlying implementation is basically the same as `get` routes except it will be used as a fallback if route is not found or manually triggered and that it recieves an additional argument with custom props.
@@ -309,7 +309,7 @@ app.get('/', (req, res)){
 
 ---
 
-## <a name="middlewares" href="how-to/documentation#middlewares">Middlewares</a>
+## <a name="middlewares" href="#middlewares">Middlewares</a>
 There are two kinds of middlewares, globals and those attached on to the route itself.
 To define a global middleware you use the `use` method. Unlike get and catch routes, global middlewares do not take a route. You can define multiple global middlewares and how they are executed is in the order they are defined. 
 
@@ -348,7 +348,7 @@ app.get('/user', hasAuth, (req, res) => {
 
 ---
 
-## <a name="svelte-implementation" href="how-to/documentation#svelte-implementation">Svelte implementation</a>
+## <a name="svelte-implementation" href="#svelte-implementation">Svelte implementation</a>
 The `RouterComponent` takes optional slot argument and exposes both the `decorator`, `component` and `props` as variables.
 
 ```html
@@ -383,7 +383,7 @@ If you want to customize the implementation and perhaps add transitions or anima
 
 ---
 
-## <a name="changing-routes" href="how-to/documentation#changing-routes">Changing routes</a>
+## <a name="changing-routes" href="#changing-routes">Changing routes</a>
 There is a few different ways to make a request to a route. First lets look at the `Actions` directive. The actions directive adds an on:click handler to the element it is used on. To reduce redundant code there are some fallbacks in place and it goes like this.
 
 link:property : `to: '/first'` -> `href: '/second'`,
@@ -456,7 +456,7 @@ Adding active class on active routes. The current location is stored in a svelte
 
 ---
 
-## <a name="programmatically-changing-routes" href="how-to/documentation#programmatically-changing-routes">Programmatically changing routes</a>
+## <a name="programmatically-changing-routes" href="#programmatically-changing-routes">Programmatically changing routes</a>
 To programmatically navigate or redirect you have two functions to your exposure. The difference between the two is that `navigate` adds a record to the `History` object which means you can go back and forth in the history, while `redirect` does not add a record, it just changes the current url. 
 
 Also where one wants to change the url without triggering a route change there is the `replace` and `alter` functions. Where `replace` will change the url and add a record to the History object and `alter` will change the url but don't add a record on to the History object.
@@ -499,7 +499,7 @@ destroy();
 
 --- 
 
-## <a name="quick-usage" href="how-to/documentation#quick-usage">Quick usage</a>
+## <a name="quick-usage" href="#quick-usage">Quick usage</a>
 
 ```html
 <script>

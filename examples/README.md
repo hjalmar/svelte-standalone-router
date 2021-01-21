@@ -1,7 +1,7 @@
 # Usage examples
 Boilerplate examples to quickly get you started with implementing svelte-standalone-router in your project.
 
-### <a name="installation" href="how-to/usage#installation">Installation</a>
+### <a name="installation" href="#installation">Installation</a>
 Start by installing the library in your svelte project.
 ```js
 npm i -D svelte-standalone-router
@@ -10,7 +10,7 @@ npm i -D svelte-standalone-router
 > Remember that only if you want to modify the view before it's rendered is when you have to create your own `svelte:component`'s from the returned props. 
 Otherwise simply initialize the `RouterComponent` and decorators and components work as is.
 
-### <a name="basic" href="how-to/usage#basic">Basic</a>
+### <a name="basic" href="#basic">Basic</a>
 Minimal example with static routes
 ```html
 <!-- component.svelte -->
@@ -40,7 +40,7 @@ Minimal example with static routes
 </main>
 ```
 
-### <a name="advanced" href="how-to/usage#advanced">Advanced example</a>
+### <a name="advanced" href="#advanced">Advanced example</a>
 A more complex example showing how to preload data and decoupling business logic from the component and how to add a transition on route change by utilizing sveltes `#key` along with slotted parameters.
 ```html
 <!-- component.svelte -->
@@ -99,7 +99,7 @@ A more complex example showing how to preload data and decoupling business logic
 </main>
 ```
 
-### <a name="decorators" href="how-to/usage#decorators">Decorators</a>
+### <a name="decorators" href="#decorators">Decorators</a>
 Often times it would be nice to be able to wrap your views in an outer `layout` wrapper. That is what decorators do. You define your 
 wrapping component and your view will be loaded inside the default slot. This way you can toggle sidebar navigation or layout structure 
 depending on what content your want to display.
