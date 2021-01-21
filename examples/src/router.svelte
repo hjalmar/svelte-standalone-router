@@ -20,7 +20,7 @@
 
   // get the href attribute from <Base> element.
   // we use getAttribute('href') so we don't get the absolute url
-  Router.linkBase = document.querySelector('base').getAttribute('href');
+  Router.linkBase = document.querySelector('base')?.getAttribute('href') || '';
   Router.scrollOffset = 100;
   
   // implementaiton
