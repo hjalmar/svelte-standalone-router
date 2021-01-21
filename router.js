@@ -1,5 +1,5 @@
 import RouterContext, { Router } from './SvelteStandaloneRouter.js';
-import { internalGoTo, getPathname } from './helpers.js';
+import { internalGoTo, getPathname, cleanURL } from './helpers.js';
 import { writable } from 'svelte/store';
 
 export let prev = { location: { ...window.location }, firstLoad: false };
@@ -14,9 +14,10 @@ const internalLinksHandler = (e) => {
   const target = e.target;
   if(target.tagName == 'A'){
     const href = target.getAttribute('href');
-    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && href.indexOf('#') > -1){
+    const isHashOnly = href.indexOf('#') > -1;
+    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && isHashOnly){
       // update the prev data
-      internalGoTo(href, e);
+      internalGoTo(isHashOnly ? window.location.pathname + href : href, e);
       prev.location = { ...window.location };
     }
   }
@@ -25,7 +26,7 @@ const internalLinksHandler = (e) => {
 // the popstate callback handler
 const popstateHandler = async e => {
   let endEarly = false;
-  const sameURL = prev.location.pathname == window.location.pathname && prev.location.search == window.location.search;
+  const sameURL = cleanURL(window.location.pathname + '/') == cleanURL(prev.location.pathname + '/') && prev.location.search == window.location.search;
   // don't continue if we are doing internal hash linking
   if(window.location.hash != '' && sameURL && prev.firstLoad){
     endEarly = true;
