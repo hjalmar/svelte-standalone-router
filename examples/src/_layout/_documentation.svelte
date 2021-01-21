@@ -41,7 +41,7 @@
   <aside>
     <ul id="nav" bind:this={nav}>
       {#each aside as item}
-        <li class:inview={false} data-name="{item.name}"><a href="{item.href}">{item.label}</a></li>
+        <li class:inview={false} data-name="{item.name}"><a href="{window.location.pathname}{item.href}">{item.label}</a></li>
       {/each}
     </ul>
   </aside>
