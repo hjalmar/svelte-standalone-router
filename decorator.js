@@ -20,17 +20,12 @@ export default (context, ...middleware) => {
   const wrappedCall = (url, ...fns) => {
     const callback = fns.pop();
     context.get(url, ...[...middleware, ...fns], (req, res) => {
-      let component, props;
       callback(req, {
-        send: (_component, _props) => {
-          component = _component;
-          props = _props;
+        send: (component, props) => {
+          res.send(component, props, decorator);
         },
         error: res.error
       });
-      if(component){
-        res.send(component, props, decorator);
-      }
     });
     return {
       get: (_url, ...args) => wrappedCall(url + _url, ...args)
