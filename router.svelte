@@ -1,6 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
-  import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter';
+  import { onMount, tick } from 'svelte';
+  import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter.js';
   import { contexts, prev } from './router.js';
   import { internalGoTo } from './helpers.js';
 
@@ -26,7 +26,7 @@
       // always start from the top of the page
       window.scrollTo({ top: 0 });
     }
-
+    
     // update the writable store
     component.set({
       context: decorator ? callback : class extends callback{},
@@ -34,20 +34,23 @@
       props
     });
 
+    // if we have visited a a url with a hash in it
+    // we need to await a tick so the component is loaded
+    // before we can scroll to that place in the dom
+    if(window.location.hash){
+      await tick();
+      // but we also have this weird behaviour where the location pathname is
+      // not accessible so we need to pass it manually.
+      setTimeout(() => {internalGoTo(window.location.pathname + window.location.hash)}, 0); 
+    }
+
     // flag that we have a first load
     if(!prev.firstLoad){
       prev.firstLoad = true;
     }
   });
 
-  onMount(() => {
-    // NOTE: we have to this settimeout hack to move the 
-    // execution to the end of the call stack. on load the #hash 
-    // take some time before finishing, and sveltes tick does not
-    // register it, perhaps because it's a scroll event? either way
-    // back of the call-stack and it works as expected.
-    setTimeout(_ => internalGoTo(window.location.pathname + window.location.hash), 0);
-  })
+  onMount(() => {});
 </script>
 
 {#if $component}
