@@ -13,7 +13,7 @@ export let Router = new class RouterProperties{
     if(typeof value != 'string'){
       throw new SvelteStandaloneRouterError(`Invalid 'linkBase'. Expecting value of type 'string'`);
     }
-    return this.__linkBase = value;
+    return this.__linkBase = value.endsWith('/') ? value : value + '/';
   }
   set linkBase(value){
     return this.setLinkBase(value);
