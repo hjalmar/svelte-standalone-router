@@ -1,4 +1,4 @@
-import RouterContext, { Router } from './SvelteStandaloneRouter.js';
+import RouterContext from './SvelteStandaloneRouter.js';
 import { internalGoTo, getPathname, cleanURL } from './helpers.js';
 import { writable } from 'svelte/store';
 
@@ -14,10 +14,11 @@ const internalLinksHandler = (e) => {
   const target = e.target;
   if(target.tagName == 'A'){
     const href = target.getAttribute('href');
-    const isHashOnly = href.indexOf('#') > -1;
-    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && isHashOnly){
+    const isHashLink = href.indexOf('#') > -1;
+    if(!(/^[a-zA-Z]+\:\/\/(.*)/.test(href)) && isHashLink){
+      // go to position
+      internalGoTo(href.startsWith('#') ? window.location.pathname + href : href, e);
       // update the prev data
-      internalGoTo(href, e);
       prev.location = { ...window.location };
     }
   }
