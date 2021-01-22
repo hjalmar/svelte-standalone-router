@@ -351,7 +351,7 @@ app.get('/user', hasAuth, (req, res) => {
 ## <a name="svelte-implementation" href="#svelte-implementation">Svelte implementation</a>
 The `RouterComponent` takes optional slot argument and exposes both the `decorator`, `component` and `props` as variables.
 
-```html
+```svelte
 <script>
   import RouterComponent from 'svelte-standalone-router';
 </script>
@@ -363,7 +363,7 @@ If you want to customize the implementation and perhaps add transitions or anima
 > svelte `{#key}` syntax does not exist in svelte `3.0.0`. Install `svelte@latest` to get the latest version and to be able to utilize that functionality. 
 
 
-```html
+```svelte
 <script>
   import RouterComponent from 'svelte-standalone-router';
 </script>
@@ -392,7 +392,7 @@ Element:attribute : `href="/third"` -> `data-href="/fourth"`
 So it goes from link property `to`, then, `href`, then element attribute `href` and lastly data-attribute `data-href`. Why so complicated? Because on links we want to use the href attribute to reduce code, while on maybe buttons that according to the specs don't implement a href attribute. Is that such a problem using 'expando attributes'? for some it might not, but for others arguing for correct semantics it perhaps would, i'm not the judge of that. Use the method that suits your needs.
 
 The link `Action` also accepts an object of properties, but as the bare minimum it will fallback and use the `href` attribute to know which page to route to.
-```html
+```svelte
 <script>
   import { link } from 'svelte-standalone-router';
 </script>
@@ -400,7 +400,7 @@ The link `Action` also accepts an object of properties, but as the bare minimum 
 ``` 
 
 The link properties will always have precedence over the elements attributes. In the example below the page will navigate to `/contact`.
-```html
+```svelte
 <script>
   import { link } from 'svelte-standalone-router';
 </script>
@@ -408,7 +408,7 @@ The link properties will always have precedence over the elements attributes. In
 ``` 
 
 Different ways of navigating with an example using a button.
-```html
+```svelte
 <script>
   import { link, navigate } from 'svelte-standalone-router';
 </script>
@@ -420,7 +420,7 @@ Different ways of navigating with an example using a button.
 ``` 
 
 You can also pass along a state object to the `Request` object.
-```html
+```svelte
 <script>
   import { link } from 'svelte-standalone-router';
 </script>
@@ -445,7 +445,7 @@ LinkOptions {
 ```
 
 Adding active class on active routes. The current location is stored in a svelte store. Compare that to the route to add an active class on the navigation link.
-```html 
+```svelte 
 <script>
   import { location } from 'svelte-standalone-router';
 </script>
@@ -462,7 +462,7 @@ To programmatically navigate or redirect you have two functions to your exposure
 Also where one wants to change the url without triggering a route change there is the `replace` and `alter` functions. Where `replace` will change the url and add a record to the History object and `alter` will change the url but don't add a record on to the History object.
 
 The helper implementation arguments
-```
+```js
 navigate(url : String, state : Object);
 redirect(url : String, state : Object);
 replace(url : String, state : Object);
@@ -479,7 +479,7 @@ alter('/subpage');
 There also exists a `Navigate`, `Redirect`, `Replace` and `Alter` svelte components that implement the same logic as the link/navigation methods. You can differentiate it by the fact that svelte-components needs to be Capitalized.
 
 Like the link action you can use either `to` or `href` with the `to` prop having precedence. The components implement the helper functions so you can optionally pass a state prop.
-```html
+```svelte
 <script>
   import { Navigate, Redirect, Replace, Alter } from 'svelte-standalone-router';
 </script>
@@ -501,7 +501,7 @@ destroy();
 
 ## <a name="quick-usage" href="#quick-usage">Quick usage</a>
 
-```html
+```svelte
 <script>
   import RouterComponent, { context } from 'svelte-standalone-router';
 

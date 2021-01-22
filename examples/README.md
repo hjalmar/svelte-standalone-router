@@ -12,7 +12,7 @@ Otherwise simply initialize the `RouterComponent` and decorators and components 
 
 ### <a name="basic" href="#basic">Basic</a>
 Minimal example with static routes
-```html
+```svelte
 <!-- component.svelte -->
 <script>
   import RouterComponent, { context } from 'svelte-standalone-router';
@@ -42,7 +42,7 @@ Minimal example with static routes
 
 ### <a name="advanced" href="#advanced">Advanced example</a>
 A more complex example showing how to preload data and decoupling business logic from the component and how to add a transition on route change by utilizing sveltes `#key` along with slotted parameters.
-```html
+```svelte
 <!-- component.svelte -->
 <script>
   import { fade } from 'svelte/transition';
@@ -104,7 +104,7 @@ Often times it would be nice to be able to wrap your views in an outer `layout` 
 wrapping component and your view will be loaded inside the default slot. This way you can toggle sidebar navigation or layout structure 
 depending on what content your want to display.
 
-```html
+```svelte
 <!-- component.svelte -->
 <script>
     // import the decorator helper function
