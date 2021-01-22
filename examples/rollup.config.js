@@ -51,16 +51,14 @@ export default {
         '.md'
       ],
       preprocess: mdsvex({
-
-          highlight: function (str, lang) {
-            console.log('aah')
-            if (lang && lang in Prism.languages) {
-              try {
-                return Prism.highlight(str, Prism.languages[lang], lang);
-              } catch(__) {}
-            }
-            return '';
-          },
+        highlight: function (str, lang) {
+          if (lang && lang in Prism.languages) {
+            try {
+              return Prism.highlight(str, Prism.languages[lang], lang);
+            } catch(__) {}
+          }
+          return '';
+        },
         extensions: ['.svx', '.md']
       }),
 		}),

@@ -10,44 +10,27 @@
   // pages
   import Index from './pages/index.svelte';
   import Documentation from './pages/documentation.svx';
-  import Usage from './pages/usage.svx';
-  import Contact from './pages/contact.svelte';
+  import Guides from './pages/usage.svx';
   import Error from './pages/error.svelte';
 
-
-  // individual pages
-  const pages = { Usage, Contact };
-
-  // get the href attribute from <Base> element.
-  // we use getAttribute('href') so we don't get the absolute url
-  Router.linkBase = document.querySelector('base')?.getAttribute('href') || '';
   Router.scrollOffset = 100;
-  
+  Router.linkBase = '/svelte-standalone-router';
   // implementaiton
   const app = context({
     initial: location.pathname,
     base: Router.linkBase,
   });
- 
+  
   // catch fallbacks
   app.catch((req, res, props) => res.send(Error, { time: 5 }));
-
+  
   // decorators
   const main = decorator(_main);
   main('/', (req, res) => res.send(Index));
   // documentation
   const documentation = decorator(_documentation);
   documentation('/how-to/documentation', (req, res) => res.send(Documentation));
-  documentation('/how-to/usage', (req, res) => res.send(Usage));
-
-  main('/:page', (req, res) => {
-    const string = req.params.page;
-    const p = pages[(string && string.charAt(0).toUpperCase() + string.slice(1)) || 'Index'];
-    if(!p){
-      return res.error();
-    }
-    res.send(p);
-  });
+  documentation('/how-to/guides', (req, res) => res.send(Guides));
 </script>
 
 <RouterComponent let:decorator let:component let:props>
