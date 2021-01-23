@@ -17,7 +17,12 @@ export default (context, ...middleware) => {
   if(!context){
     throw new Error(`Invalid Router context. Did you initialize the decorator with a valid context? or made sure to call it after one has been created?`);
   }
+  // we need to keep track of the root url else 
+  // everything would become nested one level deeper
+  let root = '';
   const wrappedCall = (url, ...fns) => {
+    // define the root of the chaining
+    if(!root) root = url;
     let decoratorProps;
     let decoratorPropsCallback = (props) => {
       decoratorProps = { ...props };
@@ -32,7 +37,7 @@ export default (context, ...middleware) => {
       }, decoratorPropsCallback);
     });
     return {
-      get: (_url, ...args) => wrappedCall(url + _url, ...args)
+      get: (_url, ...args) => wrappedCall(`${root}/${_url}`, ...args)
     };
   }
   return wrappedCall;
