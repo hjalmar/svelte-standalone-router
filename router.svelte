@@ -14,7 +14,7 @@
   const { component } = contexts.get(context);
 
   // store the current/previous pathname to compare with the next route that wants to get loaded 
-  context.subscribe(async (callback, props = {}, decorator) => {
+  context.subscribe(async (callback, props = {}, decorator = {}) => {
     // a dirty check to see it is a "component". Since there is not way to check if it is a svelte component
     // this would atleast force it to be a function and will catch most errors where a svelte component isn't passed
     if(typeof callback != 'function'){
@@ -30,7 +30,8 @@
     // update the writable store
     component.set({
       context: decorator ? callback : class extends callback{},
-      decorator: !decorator ? undefined : class extends decorator{},
+      decorator: !decorator.component ? undefined : class extends decorator.component{},
+      decoratorProps: decorator.props || undefined,
       props
     });
 
@@ -49,18 +50,16 @@
       prev.firstLoad = true;
     }
   });
-
-  onMount(() => {});
 </script>
 
 {#if $component}
-  <slot component={$component.context} decorator={$component.decorator} props={$component.props}>
+  <slot component={$component.context} props={$component.props} decorator={$component.decorator} decoratorProps={$component.decoratorProps}>
     {#if $component.decorator}
-      <svelte:component this={$component.decorator}>
-        <svelte:component this={$component.context} {...$component.props}></svelte:component>
+      <svelte:component this={$component.decorator} {...($component.decoratorProps ? $component.decoratorProps : {})}>
+        <svelte:component this={$component.context} {...$component.props} />
       </svelte:component>
     {:else}
-      <svelte:component this={$component.context} {...$component.props}></svelte:component>
+      <svelte:component this={$component.context} {...$component.props} />
     {/if}
   </slot>
 {/if}

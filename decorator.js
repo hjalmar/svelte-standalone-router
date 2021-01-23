@@ -18,14 +18,18 @@ export default (context, ...middleware) => {
     throw new Error(`Invalid Router context. Did you initialize the decorator with a valid context? or made sure to call it after one has been created?`);
   }
   const wrappedCall = (url, ...fns) => {
+    let decoratorProps;
+    let decoratorPropsCallback = (props) => {
+      decoratorProps = { ...props };
+    };
     const callback = fns.pop();
     context.get(url, ...[...middleware, ...fns], (req, res) => {
       callback(req, {
         send: (component, props) => {
-          res.send(component, props, decorator);
+          res.send(component, props, { component: decorator, props: decoratorProps });
         },
         error: res.error
-      });
+      }, decoratorPropsCallback);
     });
     return {
       get: (_url, ...args) => wrappedCall(url + _url, ...args)
