@@ -143,10 +143,24 @@ const layout = decorator(_layout);
 layout('/', (req, res) => res.send(Index));
 ```
 
+The decorator callback function exposes an additional third argument which is a function call that accepts properties. This is so we can pass props to the decorator at run time where props might change depending on conditions not yet known.
+
+```js
+layout('/', (req, res, props) => {
+  // define props on the decorator. this has to be defined before 
+  // responding with send and a component gets send to be rendered.
+  props({
+    props: 'prop defined on the decorator component'
+  });
+  // send our component to be rendered
+  res.send(Index, { props: 'props on the inner component' });
+});
+```
+
 There is some overloading going on behind the scenes due to the fact that we might need to register the route on the right context. 
 Without the first argument being the context, the context defaults back to the first one defined, the same as it does for the `RouterComponent`.
 
-Let's take a look at the how the overloading is handled internally. You can see the pattern that it shifts the first argument if a context is provided or not.
+Let's take a look at how the overloading is handled internally. You can see the pattern that it shifts the first argument if a context is provided or not.
 ```js
 // the first argument needs to be a context if not wanting to default back to the first one defined
 // otherwise the first argument is the decorator component. and lastly all the rest arguments are
@@ -368,14 +382,14 @@ If you want to customize the implementation and perhaps add transitions or anima
   import RouterComponent from 'svelte-standalone-router';
 </script>
 
-<RouterComponent let:decorator let:component let:props>
+<RouterComponent let:decorator let:decoratorProps let:component let:props>
   {#key component}
     {#if decorator}
-      <svelte:component this={decorator}>
-        <div in:fade><svelte:component this={component} {...props}></svelte:component></div>
+      <svelte:component this={decorator} {...decoratorProps}>
+        <div in:fade><svelte:component this={component} {...props} /></div>
       </svelte:component>
     {:else}
-      <div in:fade><svelte:component this={component} {...props}></svelte:component></div>
+      <div in:fade><svelte:component this={component} {...props} /></div>
     {/if}
   {/key}
 </RouterComponent>
