@@ -1,5 +1,5 @@
 <script>
-  import { onMount, tick } from 'svelte';
+  import { tick } from 'svelte';
   import RouterContext, { Router, SvelteStandaloneRouterError } from './SvelteStandaloneRouter.js';
   import { contexts, prev } from './router.js';
   import { internalGoTo } from './helpers.js';
@@ -13,7 +13,6 @@
   }
   const { component } = contexts.get(context);
 
-  // store the current/previous pathname to compare with the next route that wants to get loaded 
   context.subscribe(async (callback, props = {}, decorator = {}) => {
     // a dirty check to see it is a "component". Since there is not way to check if it is a svelte component
     // this would atleast force it to be a function and will catch most errors where a svelte component isn't passed
