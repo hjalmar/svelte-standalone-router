@@ -28,7 +28,7 @@
     
     // update the writable store
     component.set({
-      context: decorator ? callback : class extends callback{},
+      context: callback,
       decorator: !decorator.component ? undefined : decorator.component,
       decoratorProps: decorator.props || undefined,
       props
