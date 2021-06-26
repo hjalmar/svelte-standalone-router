@@ -13,6 +13,13 @@
   }
   const { component } = contexts.get(context);
 
+  let object = {
+    context: undefined,
+    props: {},
+    decorator: undefined,
+    decoratorProps: {}
+  };
+
   context.subscribe(async (callback, props = {}, decorator = {}) => {
     // a dirty check to see it is a "component". Since there is not way to check if it is a svelte component
     // this would atleast force it to be a function and will catch most errors where a svelte component isn't passed
@@ -26,20 +33,13 @@
       window.scrollTo({ top: 0 });
     }
 
-    let object = {
-      context: undefined,
-      props: {},
-      decorator: undefined,
-      decoratorProps: {}
-    };
-
     object.context = callback;
     object.decorator = decorator.component;
+    object.props = props;
     if(decorator.props){
       object.decoratorProps = { ...decorator.props };
     }
-    object.props = props;
-
+    
     // update the writable store
     component.set(object);
 

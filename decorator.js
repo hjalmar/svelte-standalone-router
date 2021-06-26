@@ -23,39 +23,22 @@ export default (context, ...middleware) => {
   const wrappedCall = (url, ...fns) => {
     // define the root of the chaining
     if(!root) root = url;
-    let decoratorProps;
-    let decoratorPropsCallback = (props) => {
-      decoratorProps = { ...props };
-    };
-
-    const _decorator = { component: decorator };
     
-    // NOTE: this resets decorator props. So those needs 
-    // to be defined once again if e.g called in a error catch
+    const decoratorWrapper = (fn) => (req, res) => {
+      let _dProps = undefined;
+      let _props = undefined;
+      let _component = undefined;
+      fn(req, { send: (component, props) => {_component = component; _props = props;}, error: res.error }, (dprops) => _dProps = dprops);
+      res.send(_component, _props, { component: decorator, props: _dProps });
+    }
+    
+    // wrapping a callback in a decorator
     if(typeof url == 'function'){
-      return (req, res) => url(req, {
-        send: (component, props) => {
-          if(decoratorProps){
-            _decorator.props = decoratorProps
-          }
-          res.send(component, props, _decorator)
-        },
-        error: res.error
-      }, decoratorPropsCallback);
+      return decoratorWrapper(url);
     }
     
     const callback = fns.pop();
-    context.get(url, ...[...middleware, ...fns], (req, res) => {
-      callback(req, {
-        send: (component, props) => { 
-          if(decoratorProps){
-            _decorator.props = decoratorProps
-          }
-          res.send(component, props, _decorator);
-        },
-        error: res.error
-      }, decoratorPropsCallback);
-    });
+    context.get(url, ...[...middleware, ...fns], decoratorWrapper(callback));
     return {
       get: (_url, ...args) => wrappedCall(`${root}/${_url}`, ...args)
     };
