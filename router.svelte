@@ -25,14 +25,23 @@
       // always start from the top of the page
       window.scrollTo({ top: 0 });
     }
-    
+
+    let object = {
+      context: undefined,
+      props: {},
+      decorator: undefined,
+      decoratorProps: {}
+    };
+
+    object.context = callback;
+    object.decorator = decorator.component;
+    if(decorator.props){
+      object.decoratorProps = { ...decorator.props };
+    }
+    object.props = props;
+
     // update the writable store
-    component.set({
-      context: callback,
-      decorator: !decorator.component ? undefined : decorator.component,
-      decoratorProps: decorator.props || undefined,
-      props
-    });
+    component.set(object);
 
     // if we have visited a a url with a hash in it
     // we need to await a tick so the component is loaded
@@ -54,7 +63,7 @@
 {#if $component}
   <slot component={$component.context} props={$component.props} decorator={$component.decorator} decoratorProps={$component.decoratorProps}>
     {#if $component.decorator}
-      <svelte:component this={$component.decorator} {...($component.decoratorProps ? $component.decoratorProps : {})}>
+      <svelte:component this={$component.decorator} {...$component.decoratorProps}>
         <svelte:component this={$component.context} {...$component.props} />
       </svelte:component>
     {:else}

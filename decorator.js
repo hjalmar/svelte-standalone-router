@@ -27,11 +27,31 @@ export default (context, ...middleware) => {
     let decoratorPropsCallback = (props) => {
       decoratorProps = { ...props };
     };
+
+    const _decorator = { component: decorator };
+    
+    // NOTE: this resets decorator props. So those needs 
+    // to be defined once again if e.g called in a error catch
+    if(typeof url == 'function'){
+      return (req, res) => url(req, {
+        send: (component, props) => {
+          if(decoratorProps){
+            _decorator.props = decoratorProps
+          }
+          res.send(component, props, _decorator)
+        },
+        error: res.error
+      }, decoratorPropsCallback);
+    }
+    
     const callback = fns.pop();
     context.get(url, ...[...middleware, ...fns], (req, res) => {
       callback(req, {
-        send: (component, props) => {
-          res.send(component, props, { component: decorator, props: decoratorProps });
+        send: (component, props) => { 
+          if(decoratorProps){
+            _decorator.props = decoratorProps
+          }
+          res.send(component, props, _decorator);
         },
         error: res.error
       }, decoratorPropsCallback);
