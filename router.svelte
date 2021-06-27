@@ -37,7 +37,7 @@
     object.decorator = decorator.component;
     object.props = props;
     if(decorator.props){
-      object.decoratorProps = { ...decorator.props };
+      object.decoratorProps = decorator.props;
     }
     
     // update the writable store
