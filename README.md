@@ -553,7 +553,7 @@ destroy();
 <RouterComponent />
 ```
 
-Enable sirv for SPA with the flag '--single'
+Enable sirv for SPA with the flag `--single`
 ```js
 "start": "sirv public --single"
 ```
