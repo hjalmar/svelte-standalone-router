@@ -28,8 +28,11 @@ export default (context, ...middleware) => {
       let _dProps = undefined;
       let _props = undefined;
       let _component = undefined;
-      fn(req, { send: (component, props) => {_component = component; _props = props;}, error: res.error }, (dprops) => _dProps = dprops);
-      res.send(_component, _props, { component: decorator, props: _dProps });
+      fn(req, { send: (component, props) => {
+        _component = component; 
+        _props = props;
+        res.send(_component, _props, { component: decorator, props: _dProps });
+      }, error: res.error }, (dprops) => _dProps = dprops);
     }
     
     // wrapping a callback in a decorator
